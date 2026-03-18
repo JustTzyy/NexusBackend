@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Session Assignment</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f5;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        .wrapper {
+            max-width: 600px;
+            margin: 40px auto;
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            padding: 36px 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            color: #ffffff;
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .header p {
+            margin: 6px 0 0;
+            color: #bfdbfe;
+            font-size: 13px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #f59e0b;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            border-radius: 999px;
+            margin-top: 14px;
+        }
+
+        .body {
+            padding: 36px 40px;
+        }
+
+        .greeting {
+            font-size: 16px;
+            color: #1e293b;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .intro {
+            font-size: 14px;
+            color: #475569;
+            line-height: 1.7;
+            margin-bottom: 28px;
+        }
+
+        .info-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 24px 28px;
+            margin-bottom: 28px;
+        }
+
+        .info-card table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .info-card td {
+            padding: 9px 0;
+            font-size: 14px;
+            vertical-align: top;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .info-card tr:last-child td {
+            border-bottom: none;
+        }
+
+        .info-card td:first-child {
+            color: #64748b;
+            font-weight: 500;
+            width: 38%;
+        }
+
+        .info-card td:last-child {
+            color: #0f172a;
+            font-weight: 600;
+        }
+
+        .action-box {
+            background: #eff6ff;
+            border: 1px solid #93c5fd;
+            border-radius: 10px;
+            padding: 20px 28px;
+            margin-bottom: 28px;
+            text-align: center;
+        }
+
+        .action-box p {
+            margin: 0;
+            font-size: 14px;
+            color: #1d4ed8;
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+        .action-box strong {
+            color: #1e40af;
+        }
+
+        .note {
+            font-size: 13px;
+            color: #64748b;
+            line-height: 1.6;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 20px;
+        }
+
+        .footer {
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            padding: 20px 40px;
+            text-align: center;
+        }
+
+        .footer p {
+            margin: 0;
+            font-size: 12px;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="header">
+            <h1>{{CompanyName}}</h1>
+            <p>Tutoring Session Management</p>
+            <div class="badge">⏳ Action Required</div>
+        </div>
+        <div class="body">
+            <p class="greeting">Hello, {{TeacherName}}!</p>
+            <p class="intro">
+                An administrator has assigned you to a tutoring session.
+                Please review the schedule details below and log in to confirm or decline.
+            </p>
+
+            <div class="info-card">
+                <table>
+                    <tr>
+                        <td>Subject</td>
+                        <td>{{SubjectName}}</td>
+                    </tr>
+                    <tr>
+                        <td>Student</td>
+                        <td>{{StudentName}}</td>
+                    </tr>
+                    <tr>
+                        <td>Room</td>
+                        <td>{{RoomName}}</td>
+                    </tr>
+                    <tr>
+                        <td>Day</td>
+                        <td>{{DayName}}</td>
+                    </tr>
+                    <tr>
+                        <td>Time</td>
+                        <td>{{TimeSlot}}</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="action-box">
+                <p>
+                    You have been assigned to this schedule.<br />
+                    <strong>Please log in to review and confirm your availability.</strong>
+                </p>
+            </div>
+
+            <p class="note">
+                If you have any conflicts or concerns, please contact the administrator as soon as possible.
+                Your timely response helps us keep everything on track.
+            </p>
+        </div>
+        <div class="footer">
+            <p>&copy; {{Year}} {{CompanyName}}. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+
+</html>

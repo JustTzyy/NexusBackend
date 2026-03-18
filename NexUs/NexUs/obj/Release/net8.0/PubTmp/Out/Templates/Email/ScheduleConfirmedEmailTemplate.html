@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Session Confirmed</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f5;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        .wrapper {
+            max-width: 600px;
+            margin: 40px auto;
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            padding: 36px 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            color: #ffffff;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        .header p {
+            margin: 6px 0 0;
+            color: #94a3b8;
+            font-size: 13px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #22c55e;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            border-radius: 999px;
+            margin-top: 14px;
+        }
+
+        .body {
+            padding: 36px 40px;
+        }
+
+        .greeting {
+            font-size: 16px;
+            color: #1e293b;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .intro {
+            font-size: 14px;
+            color: #475569;
+            line-height: 1.7;
+            margin-bottom: 28px;
+        }
+
+        .info-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 24px 28px;
+            margin-bottom: 28px;
+        }
+
+        .info-card table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .info-card td {
+            padding: 9px 0;
+            font-size: 14px;
+            vertical-align: top;
+        }
+
+        .info-card td:first-child {
+            color: #64748b;
+            font-weight: 500;
+            width: 38%;
+        }
+
+        .info-card td:last-child {
+            color: #0f172a;
+            font-weight: 600;
+        }
+
+        .start-date-box {
+            background: #f0fdf4;
+            border: 1px solid #86efac;
+            border-radius: 10px;
+            padding: 20px 28px;
+            margin-bottom: 28px;
+            text-align: center;
+        }
+
+        .start-date-box .label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #16a34a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .start-date-box .date {
+            font-size: 22px;
+            font-weight: 800;
+            color: #15803d;
+        }
+
+        .note {
+            font-size: 13px;
+            color: #64748b;
+            line-height: 1.6;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 20px;
+        }
+
+        .footer {
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            padding: 20px 40px;
+            text-align: center;
+        }
+
+        .footer p {
+            margin: 0;
+            font-size: 12px;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="header">
+            <h1>{{CompanyName}}</h1>
+            <p>Tutoring Session Management</p>
+            <div class="badge">✓ Session Confirmed</div>
+        </div>
+        <div class="body">
+            <p class="greeting">Hello, {{RecipientName}}!</p>
+            <p class="intro">
+                Great news — your tutoring session has been <strong>confirmed</strong>.
+                Here are the details of your upcoming session:
+            </p>
+
+            <div class="info-card">
+                <table>
+                    <tr>
+                        <td>Subject</td>
+                        <td>{{SubjectName}}</td>
+                    </tr>
+                    <tr>
+                        <td>Teacher</td>
+                        <td>{{TeacherName}}</td>
+                    </tr>
+                    <tr>
+                        <td>Student</td>
+                        <td>{{StudentName}}</td>
+                    </tr>
+                    <tr>
+                        <td>Day</td>
+                        <td>{{DayName}}</td>
+                    </tr>
+                    <tr>
+                        <td>Time</td>
+                        <td>{{TimeSlot}}</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="start-date-box">
+                <div class="label">Your first session starts on</div>
+                <div class="date">{{StartDate}}</div>
+            </div>
+
+            <p class="note">
+                Sessions recur every <strong>{{DayName}}</strong> at <strong>{{TimeSlot}}</strong>.
+                If you have any questions or need to make changes, please contact your administrator.
+            </p>
+        </div>
+        <div class="footer">
+            <p>&copy; {{Year}} {{CompanyName}}. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+
+</html>

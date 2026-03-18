@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Learning Journey Awaits</title>
+  <style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f4f6f9; margin: 0; padding: 0; }
+    .wrapper { max-width: 600px; margin: 30px auto; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .header { background: linear-gradient(135deg, #064e3b 0%, #059669 100%); padding: 32px 40px; text-align: center; }
+    .header h1 { color: #ffffff; margin: 0; font-size: 22px; font-weight: 700; }
+    .header p { color: #a7f3d0; margin: 8px 0 0; font-size: 14px; }
+    .body { padding: 36px 40px; }
+    .body h2 { color: #064e3b; font-size: 20px; margin-top: 0; }
+    .body p { color: #4b5563; line-height: 1.7; font-size: 15px; }
+    .highlight { background: #ecfdf5; border-left: 4px solid #059669; padding: 14px 18px; border-radius: 4px; margin: 20px 0; }
+    .highlight p { color: #065f46; margin: 0; font-weight: 500; }
+    .cta-btn { display: inline-block; margin: 20px 0; padding: 12px 28px; background: #059669; color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 15px; }
+    .footer { background: #f9fafb; padding: 20px 40px; text-align: center; }
+    .footer p { color: #9ca3af; font-size: 12px; margin: 4px 0; }
+    .footer a { color: #6b7280; text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="header">
+      <h1>{{CompanyName}}</h1>
+      <p>Expert Tutoring Tailored for You</p>
+    </div>
+    <div class="body">
+      <h2>Hi {{RecipientName}},</h2>
+      <p>
+        We noticed you've been exploring your options — and we wanted to reach out with a special message.
+        At <strong>{{CompanyName}}</strong>, we match you with expert teachers who understand your unique learning style.
+      </p>
+      <div class="highlight">
+        <p>Ready to book your first tutoring session? It only takes a few minutes to get started!</p>
+      </div>
+      <p>
+        Our sessions are flexible, affordable, and designed around your schedule. Whether it's exam prep,
+        skill-building, or ongoing support — we're here for you.
+      </p>
+      <a href="{{LoginUrl}}" class="cta-btn">Book a Session Now</a>
+      <p style="color: #6b7280; font-size: 13px;">
+        Questions? Contact our team anytime — we're happy to help you find the right tutor.
+      </p>
+    </div>
+    <div class="footer">
+      <p>&copy; {{Year}} {{CompanyName}}. All rights reserved.</p>
+      <p><a href="{{UnsubscribeUrl}}">Unsubscribe</a> from marketing emails.</p>
+    </div>
+  </div>
+</body>
+</html>

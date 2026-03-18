@@ -1,0 +1,16 @@
+﻿# Ignore all files and folders by default
+*
+
+# Except the NexUs folder
+!NexUs/
+!NexUs/**
+
+# But ignore these within NexUs (they're generated or problematic)
+NexUs/.vs/
+NexUs/bin/
+NexUs/obj/
+NexUs/*.user
+NexUs/.git/
+NexUs/NexUs/nul
+
+!.gitignore

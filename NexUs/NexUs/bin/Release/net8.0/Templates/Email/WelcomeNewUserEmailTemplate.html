@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: white; padding: 40px 30px; text-align: center; border-radius: 8px 8px 0 0; }
+        .header h1 { margin: 0 0 8px 0; font-size: 28px; }
+        .header p { margin: 0; opacity: 0.85; font-size: 15px; }
+        .content { background: #ffffff; padding: 35px 30px; border: 1px solid #e8e8e8; }
+        .steps { background: #f8f9fa; border-radius: 8px; padding: 20px 25px; margin: 20px 0; }
+        .step { margin-bottom: 14px; padding-left: 38px; position: relative; }
+        .step-num { background: #1a1a2e; color: white; border-radius: 50%; width: 26px; height: 26px; display: inline-block; text-align: center; line-height: 26px; font-size: 13px; font-weight: bold; position: absolute; left: 0; top: 2px; }
+        .highlight { background: #eef2ff; border-left: 4px solid #4f46e5; padding: 14px 18px; border-radius: 0 6px 6px 0; margin: 20px 0; }
+        .button { display: inline-block; padding: 14px 36px; background: #1a1a2e; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 15px; margin: 24px 0 10px 0; }
+        .footer { text-align: center; padding: 20px; color: #888; font-size: 12px; border-top: 1px solid #eee; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Welcome to {{CompanyName}}!</h1>
+            <p>Your account has been created successfully.</p>
+        </div>
+        <div class="content">
+            <p>Hello <strong>{{UserName}}</strong>,</p>
+            <p>We're excited to have you on board! {{CompanyName}} connects students with expert tutors for personalized, flexible learning sessions.</p>
+
+            <div class="highlight">
+                <strong>Complete your profile to unlock your first free scheduling session!</strong>
+            </div>
+
+            <p>Here's how to get started:</p>
+            <div class="steps">
+                <div class="step">
+                    <span class="step-num">1</span>
+                    <strong>Complete your profile</strong> — add your name, contact details, and preferences.
+                </div>
+                <div class="step">
+                    <span class="step-num">2</span>
+                    <strong>Browse available sessions</strong> — explore subjects and find the right tutor for you.
+                </div>
+                <div class="step">
+                    <span class="step-num">3</span>
+                    <strong>Book your first session</strong> — request a tutoring session and get matched with a teacher.
+                </div>
+            </div>
+
+            <div style="text-align: center;">
+                <a href="{{SetupUrl}}" class="button">Complete My Setup</a>
+            </div>
+
+            <p style="color: #666; font-size: 14px;">If you have any questions, feel free to reach out to our support team. We're here to help!</p>
+        </div>
+        <div class="footer">
+            <p>&copy; {{Year}} {{CompanyName}}. All rights reserved.</p>
+            <p>This is an automated message. Please do not reply to this email.</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome to {{CompanyName}}</title>
+  <style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f4f6f9; margin: 0; padding: 0; }
+    .wrapper { max-width: 600px; margin: 30px auto; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .header { background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%); padding: 32px 40px; text-align: center; }
+    .header h1 { color: #ffffff; margin: 0; font-size: 24px; font-weight: 700; letter-spacing: 0.5px; }
+    .header p { color: #93c5fd; margin: 8px 0 0; font-size: 14px; }
+    .body { padding: 36px 40px; }
+    .body h2 { color: #1e3a5f; font-size: 20px; margin-top: 0; }
+    .body p { color: #4b5563; line-height: 1.7; font-size: 15px; }
+    .cta-btn { display: inline-block; margin: 20px 0; padding: 12px 28px; background: #2563eb; color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 15px; }
+    .footer { background: #f9fafb; padding: 20px 40px; text-align: center; }
+    .footer p { color: #9ca3af; font-size: 12px; margin: 4px 0; }
+    .footer a { color: #6b7280; text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="header">
+      <h1>{{CompanyName}}</h1>
+      <p>Your Learning Journey Starts Here</p>
+    </div>
+    <div class="body">
+      <h2>Welcome, {{RecipientName}}!</h2>
+      <p>
+        Thank you for joining <strong>{{CompanyName}}</strong>. We're excited to help you on your learning journey.
+        Our expert tutors are ready to support you every step of the way.
+      </p>
+      <p>
+        Explore available tutoring sessions, book your first session, and connect with a teacher that fits your schedule and learning goals.
+      </p>
+      <a href="{{LoginUrl}}" class="cta-btn">Get Started</a>
+      <p style="color: #6b7280; font-size: 13px;">
+        If you have any questions, feel free to reach out to our support team. We're here to help!
+      </p>
+    </div>
+    <div class="footer">
+      <p>&copy; {{Year}} {{CompanyName}}. All rights reserved.</p>
+      <p><a href="{{UnsubscribeUrl}}">Unsubscribe</a> from marketing emails.</p>
+    </div>
+  </div>
+</body>
+</html>

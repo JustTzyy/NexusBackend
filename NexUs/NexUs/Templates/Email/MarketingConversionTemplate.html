@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Congratulations on Your First Booking!</title>
+  <style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f4f6f9; margin: 0; padding: 0; }
+    .wrapper { max-width: 600px; margin: 30px auto; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .header { background: linear-gradient(135deg, #78350f 0%, #d97706 100%); padding: 32px 40px; text-align: center; }
+    .header h1 { color: #ffffff; margin: 0; font-size: 22px; font-weight: 700; }
+    .header p { color: #fde68a; margin: 8px 0 0; font-size: 14px; }
+    .body { padding: 36px 40px; }
+    .body h2 { color: #78350f; font-size: 22px; margin-top: 0; }
+    .body p { color: #4b5563; line-height: 1.7; font-size: 15px; }
+    .congrats-box { background: #fffbeb; border: 2px solid #fbbf24; border-radius: 8px; padding: 20px 24px; margin: 20px 0; text-align: center; }
+    .congrats-box h3 { color: #92400e; margin: 0 0 8px; font-size: 18px; }
+    .congrats-box p { color: #78350f; margin: 0; font-size: 14px; }
+    .cta-btn { display: inline-block; margin: 20px 0; padding: 12px 28px; background: #d97706; color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 15px; }
+    .footer { background: #f9fafb; padding: 20px 40px; text-align: center; }
+    .footer p { color: #9ca3af; font-size: 12px; margin: 4px 0; }
+    .footer a { color: #6b7280; text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="header">
+      <h1>{{CompanyName}}</h1>
+      <p>Your Learning Journey Has Officially Begun!</p>
+    </div>
+    <div class="body">
+      <h2>Congratulations, {{RecipientName}}!</h2>
+      <div class="congrats-box">
+        <h3>You've made your first booking!</h3>
+        <p>Welcome to the {{CompanyName}} learner community.</p>
+      </div>
+      <p>
+        We're thrilled to have you on board as an official student at <strong>{{CompanyName}}</strong>.
+        Your dedicated tutor is ready to help you achieve your learning goals.
+      </p>
+      <p>
+        Check your session details and prepare for your first class. Remember — consistency is the key to success!
+      </p>
+      <a href="{{LoginUrl}}" class="cta-btn">View My Session</a>
+      <p style="color: #6b7280; font-size: 13px;">
+        Need help? Our support team is always just a message away.
+      </p>
+    </div>
+    <div class="footer">
+      <p>&copy; {{Year}} {{CompanyName}}. All rights reserved.</p>
+      <p><a href="{{UnsubscribeUrl}}">Unsubscribe</a> from marketing emails.</p>
+    </div>
+  </div>
+</body>
+</html>
