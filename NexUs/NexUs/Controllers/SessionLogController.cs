@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NexUs.Attributes;
 using NexUs.Extensions;
@@ -32,9 +32,9 @@ namespace NexUs.Controllers
                 var result = await _sessionLogService.GetByTutoringRequestAsync(tutoringRequestId);
                 return Ok(ApiResponse<List<SessionLogResponseDto>>.SuccessResponse(result, "Session logs retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<List<SessionLogResponseDto>>.ErrorResponse("An error occurred while retrieving session logs", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<List<SessionLogResponseDto>>.ErrorResponse("An error occurred while retrieving session logs"));
             }
         }
 
@@ -53,9 +53,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<SessionLogResponseDto>.SuccessResponse(result, "Session log retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<SessionLogResponseDto>.ErrorResponse("An error occurred while retrieving session log", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<SessionLogResponseDto>.ErrorResponse("An error occurred while retrieving session log"));
             }
         }
 
@@ -71,9 +71,9 @@ namespace NexUs.Controllers
                 var result = await _sessionLogService.GetAllAsync(pagination);
                 return Ok(ApiResponse<PagedResultDto<SessionLogResponseDto>>.SuccessResponse(result, "Session logs retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<SessionLogResponseDto>>.ErrorResponse("An error occurred while retrieving session logs", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<SessionLogResponseDto>>.ErrorResponse("An error occurred while retrieving session logs"));
             }
         }
 
@@ -95,9 +95,9 @@ namespace NexUs.Controllers
             {
                 return BadRequest(ApiResponse<SessionLogResponseDto>.ErrorResponse(ex.Message));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<SessionLogResponseDto>.ErrorResponse("An error occurred while creating session log", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<SessionLogResponseDto>.ErrorResponse("An error occurred while creating session log"));
             }
         }
 
@@ -111,15 +111,20 @@ namespace NexUs.Controllers
             try
             {
                 var userId = HttpContext.GetCurrentUserId();
-                var result = await _sessionLogService.UpdateAsync(id, dto, userId);
+                var isAdmin = User.IsInRole("Super Admin") || User.IsInRole("Admin");
+                var result = await _sessionLogService.UpdateAsync(id, dto, userId, isAdmin);
                 if (result == null)
                     return NotFound(ApiResponse<SessionLogResponseDto>.ErrorResponse("Session log not found"));
 
                 return Ok(ApiResponse<SessionLogResponseDto>.SuccessResponse(result, "Session log updated successfully"));
             }
-            catch (Exception ex)
+            catch (UnauthorizedAccessException)
             {
-                return StatusCode(500, ApiResponse<SessionLogResponseDto>.ErrorResponse("An error occurred while updating session log", new List<string> { ex.Message }));
+                return StatusCode(403, ApiResponse<SessionLogResponseDto>.ErrorResponse("You do not have permission to update this session log."));
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, ApiResponse<SessionLogResponseDto>.ErrorResponse("An error occurred while updating session log"));
             }
         }
 
@@ -133,15 +138,20 @@ namespace NexUs.Controllers
             try
             {
                 var userId = HttpContext.GetCurrentUserId();
-                var result = await _sessionLogService.DeleteAsync(id, userId);
+                var isAdmin = User.IsInRole("Super Admin") || User.IsInRole("Admin");
+                var result = await _sessionLogService.DeleteAsync(id, userId, isAdmin);
                 if (!result)
                     return NotFound(ApiResponse<object>.ErrorResponse("Session log not found"));
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "Session log deleted successfully"));
             }
-            catch (Exception ex)
+            catch (UnauthorizedAccessException)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while deleting session log", new List<string> { ex.Message }));
+                return StatusCode(403, ApiResponse<object>.ErrorResponse("You do not have permission to delete this session log."));
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while deleting session log"));
             }
         }
     }

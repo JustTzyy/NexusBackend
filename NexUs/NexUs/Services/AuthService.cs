@@ -2,7 +2,9 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
+using Google.Apis.Auth;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
 using NexUs.Data;
 using NexUs.Utilities;
@@ -14,6 +16,11 @@ namespace NexUs.Services;
 
 public class AuthService : IAuthService
 {
+    private const int LoginMaxAttempts = 5;
+    private static readonly TimeSpan LoginLockoutDuration = TimeSpan.FromMinutes(15);
+    private const int OtpMaxAttempts = 3;
+    private static readonly TimeSpan OtpLockoutDuration = TimeSpan.FromMinutes(15);
+
     private readonly ApplicationDbContext _context;
     private readonly IPasswordService _passwordService;
     private readonly IEmailService _emailService;
@@ -23,6 +30,7 @@ public class AuthService : IAuthService
     private readonly ILeadService _leadService;
     private readonly IAutomationService _automationService;
     private readonly INotificationService _notificationService;
+    private readonly IMemoryCache _cache;
 
     public AuthService(
         ApplicationDbContext context,
@@ -33,7 +41,8 @@ public class AuthService : IAuthService
         IAuditService auditService,
         ILeadService leadService,
         IAutomationService automationService,
-        INotificationService notificationService)
+        INotificationService notificationService,
+        IMemoryCache cache)
     {
         _context = context;
         _passwordService = passwordService;
@@ -44,10 +53,21 @@ public class AuthService : IAuthService
         _leadService = leadService;
         _automationService = automationService;
         _notificationService = notificationService;
+        _cache = cache;
     }
 
     public async Task<LoginResponseDto?> LoginAsync(LoginDto dto)
     {
+        var lockoutKey = $"login_lockout_{dto.Email.ToLower()}";
+        var attemptsKey = $"login_attempts_{dto.Email.ToLower()}";
+
+        if (_cache.TryGetValue(lockoutKey, out DateTime loginLockoutUntil))
+        {
+            var remaining = (int)Math.Ceiling((loginLockoutUntil - DateTimeHelper.PhilippineNow).TotalMinutes);
+            _logger.LogWarning("Login blocked: account locked out for {Email}", dto.Email);
+            throw new NexUs.Exceptions.AccountLockedException(Math.Max(1, remaining));
+        }
+
         // Find user by email (not soft-deleted)
         var user = await _context.Users
             .Include(u => u.UserRoles)
@@ -59,6 +79,7 @@ public class AuthService : IAuthService
         if (user == null)
         {
             _logger.LogWarning("Login failed: User not found for email {Email}", dto.Email);
+            RecordFailedLogin(attemptsKey, lockoutKey, dto.Email);
             return null;
         }
 
@@ -69,6 +90,7 @@ public class AuthService : IAuthService
         if (credential == null)
         {
             _logger.LogWarning("Login failed: No credentials found for user {Email}", dto.Email);
+            RecordFailedLogin(attemptsKey, lockoutKey, dto.Email);
             return null;
         }
 
@@ -76,6 +98,7 @@ public class AuthService : IAuthService
         if (!_passwordService.VerifyPassword(dto.Password, credential.PasswordHash))
         {
             _logger.LogWarning("Login failed: Invalid password for user {Email}", dto.Email);
+            RecordFailedLogin(attemptsKey, lockoutKey, dto.Email);
             return null;
         }
 
@@ -97,6 +120,8 @@ public class AuthService : IAuthService
             .Where(s => !string.IsNullOrWhiteSpace(s)));
 
         _logger.LogInformation("User {Email} logged in successfully", dto.Email);
+        _cache.Remove(attemptsKey);
+        _cache.Remove(lockoutKey);
 
         // Log to audit log for Login History
         await _auditService.LogAsync("Auth", "Login", $"User logged in: {dto.Email}", user.Id);
@@ -241,12 +266,29 @@ public class AuthService : IAuthService
         {
             string? email = null;
 
+            string? googleFirstName = null;
+            string? googleLastName = null;
+
             if (!string.IsNullOrEmpty(credential))
             {
-                // Flow 1: Decode the Google ID token (from GIS One Tap / embedded button)
-                var handler = new JwtSecurityTokenHandler();
-                var jsonToken = handler.ReadJwtToken(credential);
-                email = jsonToken.Claims.FirstOrDefault(c => c.Type == "email")?.Value;
+                // Flow 1: Validate and verify the Google ID token signature (from GIS One Tap / embedded button)
+                var validationSettings = new GoogleJsonWebSignature.ValidationSettings
+                {
+                    Audience = new[] { _configuration["GoogleAuth:ClientId"] }
+                };
+                GoogleJsonWebSignature.Payload payload;
+                try
+                {
+                    payload = await GoogleJsonWebSignature.ValidateAsync(credential, validationSettings);
+                }
+                catch (InvalidJwtException ex)
+                {
+                    _logger.LogWarning(ex, "Google login failed: Invalid ID token");
+                    return null;
+                }
+                email = payload.Email;
+                googleFirstName = payload.GivenName;
+                googleLastName = payload.FamilyName;
             }
             else if (!string.IsNullOrEmpty(accessToken))
             {
@@ -254,46 +296,19 @@ public class AuthService : IAuthService
                 using var httpClient = new HttpClient();
                 httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
                 var response = await httpClient.GetAsync("https://www.googleapis.com/oauth2/v3/userinfo");
-                if (response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode)
                 {
-                    var json = await response.Content.ReadAsStringAsync();
-                    var userInfo = JsonSerializer.Deserialize<JsonElement>(json);
-                    email = userInfo.GetProperty("email").GetString();
+                    _logger.LogWarning("Google login failed: Access token rejected by userinfo endpoint (HTTP {Status})", (int)response.StatusCode);
+                    return null;
                 }
+                var json = await response.Content.ReadAsStringAsync();
+                var userInfo = JsonSerializer.Deserialize<JsonElement>(json);
+                email = userInfo.GetProperty("email").GetString();
+                googleFirstName = userInfo.TryGetProperty("given_name", out var gn) ? gn.GetString() : null;
+                googleLastName = userInfo.TryGetProperty("family_name", out var fn) ? fn.GetString() : null;
             }
 
-            if (string.IsNullOrEmpty(email))
-            {
-                _logger.LogWarning("Google login failed: No email in token");
-                return null;
-            }
-
-            // Extract name from Google data
-            string? googleFirstName = null;
-            string? googleLastName = null;
-
-            if (!string.IsNullOrEmpty(credential))
-            {
-                var handler2 = new JwtSecurityTokenHandler();
-                var jsonToken2 = handler2.ReadJwtToken(credential);
-                googleFirstName = jsonToken2.Claims.FirstOrDefault(c => c.Type == "given_name")?.Value;
-                googleLastName = jsonToken2.Claims.FirstOrDefault(c => c.Type == "family_name")?.Value;
-            }
-            else if (!string.IsNullOrEmpty(accessToken))
-            {
-                using var httpClient2 = new HttpClient();
-                httpClient2.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
-                var resp = await httpClient2.GetAsync("https://www.googleapis.com/oauth2/v3/userinfo");
-                if (resp.IsSuccessStatusCode)
-                {
-                    var json2 = await resp.Content.ReadAsStringAsync();
-                    var info = JsonSerializer.Deserialize<JsonElement>(json2);
-                    googleFirstName = info.TryGetProperty("given_name", out var gn) ? gn.GetString() : null;
-                    googleLastName = info.TryGetProperty("family_name", out var fn) ? fn.GetString() : null;
-                }
-            }
-
-            // Find existing user by email
+            // Find existing user by email — Google OAuth only works for pre-existing accounts
             var user = await _context.Users
                 .Include(u => u.UserRoles)
                     .ThenInclude(ur => ur.Role)
@@ -301,93 +316,13 @@ public class AuthService : IAuthService
                             .ThenInclude(rp => rp.Permission)
                 .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower() && u.DeletedAt == null);
 
-            // Auto-register if user doesn't exist
-            var isNewUser = user == null;
             if (user == null)
             {
-                // Check if email exists as soft-deleted
-                var softDeleted = await _context.Users
-                    .IgnoreQueryFilters()
-                    .AnyAsync(u => u.Email.ToLower() == email.ToLower() && u.DeletedAt != null);
-
-                if (softDeleted)
-                {
-                    _logger.LogWarning("Google login failed: Account with email {Email} has been deactivated", email);
-                    return null;
-                }
-
-                // Create new user
-                user = new NexUs.Models.Entities.User
-                {
-                    FirstName = googleFirstName ?? "",
-                    LastName = googleLastName ?? "",
-                    Email = email
-                };
-
-                _context.Users.Add(user);
-                await _context.SaveChangesAsync();
-
-                // Create empty credential (Google-only user, no password)
-                var cred = new NexUs.Models.Entities.UserCredential
-                {
-                    UserId = user.Id,
-                    PasswordHash = "",
-                    IsPasswordChanged = true
-                };
-                _context.Set<NexUs.Models.Entities.UserCredential>().Add(cred);
-                await _context.SaveChangesAsync();
-
-                // Assign Lead role
-                var leadRole = await _context.Roles
-                    .Include(r => r.RolePermissions)
-                        .ThenInclude(rp => rp.Permission)
-                    .FirstOrDefaultAsync(r => r.Name == "Lead" && r.DeletedAt == null);
-
-                if (leadRole != null)
-                {
-                    _context.UserRoles.Add(new NexUs.Models.Entities.UserRole
-                    {
-                        UserId = user.Id,
-                        RoleId = leadRole.Id
-                    });
-                    await _context.SaveChangesAsync();
-
-                    user.UserRoles = new List<NexUs.Models.Entities.UserRole>
-                    {
-                        new NexUs.Models.Entities.UserRole { UserId = user.Id, RoleId = leadRole.Id, Role = leadRole }
-                    };
-                }
-
-                _logger.LogInformation("New user auto-registered via Google: {Email}", email);
-                await _auditService.LogAsync("Auth", "GoogleRegister", $"New user registered via Google: {email}", user.Id);
-
-                // Marketing: create Lead record for the new Google user
-                try
-                {
-                    await _leadService.CreateFromUserAsync(user.Id, email, googleFirstName ?? "", googleLastName ?? "", "Registration");
-                    await _automationService.TriggerAsync("LeadCreated", new Dictionary<string, object>
-                    {
-                        { "UserId", user.Id },
-                        { "Email", email },
-                        { "FirstName", googleFirstName ?? "" }
-                    });
-                }
-                catch (Exception ex) { _logger.LogWarning(ex, "Marketing hook failed during Google registration for {Email}; user was created successfully", email); }
-
-                // Queue welcome email for new Google users
-                var googleFullName = $"{googleFirstName} {googleLastName}".Trim();
-                try
-                {
-                    await _automationService.TriggerAsync("UserRegistered", new Dictionary<string, object>
-                    {
-                        { "Email", email },
-                        { "FirstName", googleFullName },
-                        { "UserName", string.IsNullOrEmpty(googleFullName) ? email : googleFullName },
-                        { "SetupUrl", _configuration["ApplicationSettings:FrontendUrl"] ?? "http://localhost:5174" }
-                    });
-                }
-                catch (Exception ex) { _logger.LogWarning(ex, "UserRegistered automation trigger failed for Google user {Email}; registration completed successfully", email); }
+                _logger.LogWarning("Google login failed: No account for {Email}", email);
+                return null;
             }
+
+            var isNewUser = false;
 
             // Get roles
             var roles = user.UserRoles.Select(ur => ur.Role.Name).ToList();
@@ -643,44 +578,15 @@ public class AuthService : IAuthService
     public async Task<ValidateTokenResponseDto?> ValidateResetTokenAsync(string token)
     {
         var now = DateTimeHelper.PhilippineNow;
-        _logger.LogInformation("=== TOKEN VALIDATION DEBUG ===");
-        _logger.LogInformation("Token from URL: {Token}", token);
-        _logger.LogInformation("Current PH time: {Now}", now);
-
-        // Check if token exists at all (no filters)
-        var rawToken = await _context.PasswordResetTokens
-            .FirstOrDefaultAsync(t => t.Token == token);
-
-        if (rawToken == null)
-        {
-            _logger.LogWarning("Token NOT FOUND in database at all!");
-        }
-        else
-        {
-            _logger.LogInformation("Token FOUND: IsUsed={IsUsed}, ExpiresAt={ExpiresAt}, UserId={UserId}",
-                rawToken.IsUsed, rawToken.ExpiresAt, rawToken.UserId);
-            _logger.LogInformation("Is expired? {IsExpired} (ExpiresAt {ExpiresAt} > Now {Now} = {Result})",
-                rawToken.ExpiresAt <= now, rawToken.ExpiresAt, now, rawToken.ExpiresAt > now);
-        }
 
         var resetToken = await _context.PasswordResetTokens
             .Include(t => t.User)
             .FirstOrDefaultAsync(t => t.Token == token && !t.IsUsed && t.ExpiresAt > now);
 
-        if (resetToken == null)
-        {
-            _logger.LogWarning("Token query with filters returned NULL");
-            return new ValidateTokenResponseDto(false, null);
-        }
+        if (resetToken == null || resetToken.User == null)
+            return new ValidateTokenResponseDto(false);
 
-        if (resetToken.User == null)
-        {
-            _logger.LogWarning("Token valid but User navigation is NULL (soft-deleted user or query filter issue)");
-            return new ValidateTokenResponseDto(false, null);
-        }
-
-        _logger.LogInformation("Token is VALID for user: {Email}", resetToken.User.Email);
-        return new ValidateTokenResponseDto(true, resetToken.User.Email);
+        return new ValidateTokenResponseDto(true);
     }
 
     public async Task<bool> SendOtpAsync(string email)
@@ -738,6 +644,13 @@ public class AuthService : IAuthService
 
     public async Task<bool> VerifyOtpAsync(string email, string code)
     {
+        var otpRemaining = GetOtpLockoutRemainingMinutes(email);
+        if (otpRemaining > 0)
+        {
+            _logger.LogWarning("OTP verification blocked: locked out for {Email}", email);
+            throw new NexUs.Exceptions.AccountLockedException(otpRemaining);
+        }
+
         var now = DateTimeHelper.PhilippineNow;
         var otp = await _context.EmailVerificationOtps
             .FirstOrDefaultAsync(o =>
@@ -749,10 +662,14 @@ public class AuthService : IAuthService
         if (otp == null)
         {
             _logger.LogWarning("OTP verification failed for email: {Email}", email);
+            RecordFailedOtp(email);
             return false;
         }
 
         otp.IsUsed = true;
+        // Clear OTP attempt counters on success
+        _cache.Remove($"otp_attempts_{email.ToLower()}");
+        _cache.Remove($"otp_lockout_{email.ToLower()}");
         await _context.SaveChangesAsync();
 
         _logger.LogInformation("OTP verified successfully for email: {Email}", email);
@@ -763,6 +680,52 @@ public class AuthService : IAuthService
     {
         return await _context.Users
             .AnyAsync(u => u.Email.ToLower() == email.ToLower() && u.DeletedAt == null);
+    }
+
+    private void RecordFailedLogin(string attemptsKey, string lockoutKey, string email)
+    {
+        var attempts = _cache.GetOrCreate(attemptsKey, e =>
+        {
+            e.AbsoluteExpirationRelativeToNow = LoginLockoutDuration;
+            return 0;
+        });
+        attempts++;
+        _cache.Set(attemptsKey, attempts, LoginLockoutDuration);
+
+        if (attempts >= LoginMaxAttempts)
+        {
+            var lockoutUntil = DateTimeHelper.PhilippineNow.Add(LoginLockoutDuration);
+            _cache.Set(lockoutKey, lockoutUntil, LoginLockoutDuration);
+            _logger.LogWarning("Account locked out for {Email} after {Attempts} failed attempts", email, attempts);
+        }
+    }
+
+    private int GetOtpLockoutRemainingMinutes(string email)
+    {
+        if (_cache.TryGetValue($"otp_lockout_{email.ToLower()}", out DateTime otpLockoutUntil))
+            return Math.Max(1, (int)Math.Ceiling((otpLockoutUntil - DateTimeHelper.PhilippineNow).TotalMinutes));
+        return 0;
+    }
+
+    private void RecordFailedOtp(string email)
+    {
+        var attemptsKey = $"otp_attempts_{email.ToLower()}";
+        var lockoutKey = $"otp_lockout_{email.ToLower()}";
+
+        var attempts = _cache.GetOrCreate(attemptsKey, e =>
+        {
+            e.AbsoluteExpirationRelativeToNow = OtpLockoutDuration;
+            return 0;
+        });
+        attempts++;
+        _cache.Set(attemptsKey, attempts, OtpLockoutDuration);
+
+        if (attempts >= OtpMaxAttempts)
+        {
+            var lockoutUntil = DateTimeHelper.PhilippineNow.Add(OtpLockoutDuration);
+            _cache.Set(lockoutKey, lockoutUntil, OtpLockoutDuration);
+            _logger.LogWarning("OTP locked out for {Email} after {Attempts} failed attempts", email, attempts);
+        }
     }
 }
 

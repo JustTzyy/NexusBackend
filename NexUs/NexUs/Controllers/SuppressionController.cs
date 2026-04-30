@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NexUs.Attributes;
 using NexUs.Extensions;
@@ -21,7 +21,7 @@ namespace NexUs.Controllers
         public async Task<ActionResult<ApiResponse<PagedResultDto<SuppressionListDto>>>> GetAll([FromQuery] PaginationDto pagination)
         {
             try { return Ok(ApiResponse<PagedResultDto<SuppressionListDto>>.SuccessResponse(await _service.GetAllAsync(pagination), "Suppressions retrieved")); }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<PagedResultDto<SuppressionListDto>>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<PagedResultDto<SuppressionListDto>>.ErrorResponse("Error")); }
         }
 
         [RequirePermission("ViewSuppressions")]
@@ -34,7 +34,7 @@ namespace NexUs.Controllers
                 if (result == null) return NotFound(ApiResponse<SuppressionListDto>.ErrorResponse("Suppression not found"));
                 return Ok(ApiResponse<SuppressionListDto>.SuccessResponse(result, "Suppression retrieved"));
             }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<SuppressionListDto>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<SuppressionListDto>.ErrorResponse("Error")); }
         }
 
         [RequirePermission("ManageSuppressions")]
@@ -48,7 +48,7 @@ namespace NexUs.Controllers
                 return Ok(ApiResponse<SuppressionListDto>.SuccessResponse(result, "Suppression added"));
             }
             catch (InvalidOperationException ex) { return BadRequest(ApiResponse<SuppressionListDto>.ErrorResponse(ex.Message)); }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<SuppressionListDto>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<SuppressionListDto>.ErrorResponse("Error")); }
         }
 
         [RequirePermission("ManageSuppressions")]
@@ -60,7 +60,7 @@ namespace NexUs.Controllers
                 if (!await _service.DeleteAsync(id)) return NotFound(ApiResponse<bool>.ErrorResponse("Suppression not found"));
                 return Ok(ApiResponse<bool>.SuccessResponse(true, "Suppression removed"));
             }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error")); }
         }
 
         [HttpPost("check")]
@@ -73,7 +73,7 @@ namespace NexUs.Controllers
                 return Ok(ApiResponse<SuppressionCheckResultDto>.SuccessResponse(
                     new SuppressionCheckResultDto { Suppressed = suppressed }, "Check complete"));
             }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<SuppressionCheckResultDto>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<SuppressionCheckResultDto>.ErrorResponse("Error")); }
         }
 
         [HttpGet("unsubscribe")]
@@ -90,9 +90,9 @@ namespace NexUs.Controllers
                 await _service.EnsureSuppressedAsync(email, "Unsubscribed", "Link");
                 return Ok("You have been successfully unsubscribed.");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, $"Unsubscribe failed: {ex.Message}");
+                return StatusCode(500, "An unexpected error occurred");
             }
         }
 

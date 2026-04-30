@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NexUs.Attributes;
 using NexUs.Extensions;
@@ -32,9 +32,9 @@ namespace NexUs.Controllers
                 var result = await _roomService.GetAllRoomsAsync(pagination);
                 return Ok(ApiResponse<PagedResultDto<RoomListDto>>.SuccessResponse(result, "Rooms retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<RoomListDto>>.ErrorResponse("An error occurred while retrieving rooms", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<RoomListDto>>.ErrorResponse("An error occurred while retrieving rooms"));
             }
         }
 
@@ -50,9 +50,9 @@ namespace NexUs.Controllers
                 var result = await _roomService.GetArchivedRoomsAsync(pagination);
                 return Ok(ApiResponse<PagedResultDto<RoomListDto>>.SuccessResponse(result, "Archived rooms retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<RoomListDto>>.ErrorResponse("An error occurred while retrieving archived rooms", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<RoomListDto>>.ErrorResponse("An error occurred while retrieving archived rooms"));
             }
         }
 
@@ -73,9 +73,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<RoomResponseDto>.SuccessResponse(room, "Room retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<RoomResponseDto>.ErrorResponse("An error occurred while retrieving room", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<RoomResponseDto>.ErrorResponse("An error occurred while retrieving room"));
             }
         }
 
@@ -97,9 +97,9 @@ namespace NexUs.Controllers
             {
                 return BadRequest(ApiResponse<RoomResponseDto>.ErrorResponse(ex.Message));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<RoomResponseDto>.ErrorResponse("An error occurred while creating room", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<RoomResponseDto>.ErrorResponse("An error occurred while creating room"));
             }
         }
 
@@ -125,9 +125,9 @@ namespace NexUs.Controllers
             {
                 return BadRequest(ApiResponse<RoomResponseDto>.ErrorResponse(ex.Message));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<RoomResponseDto>.ErrorResponse("An error occurred while updating room", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<RoomResponseDto>.ErrorResponse("An error occurred while updating room"));
             }
         }
 
@@ -149,9 +149,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "Room deleted successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while deleting room", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while deleting room"));
             }
         }
 
@@ -173,9 +173,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "Room restored successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while restoring room", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while restoring room"));
             }
         }
 
@@ -197,9 +197,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "Room permanently deleted"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while permanently deleting room", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while permanently deleting room"));
             }
         }
     }

@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NexUs.Data;
@@ -158,10 +158,10 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<BuildingManagerDashboardDto>.SuccessResponse(dto, "Dashboard data retrieved"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500, ApiResponse<BuildingManagerDashboardDto>.ErrorResponse(
-                    "An error occurred", new List<string> { ex.Message }));
+                    "An error occurred"));
             }
         }
 

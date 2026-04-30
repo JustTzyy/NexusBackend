@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NexUs.Attributes;
 using NexUs.Extensions;
@@ -21,7 +21,7 @@ namespace NexUs.Controllers
         public async Task<ActionResult<ApiResponse<PagedResultDto<CampaignListDto>>>> GetAll([FromQuery] PaginationDto pagination, [FromQuery] string? status = null)
         {
             try { return Ok(ApiResponse<PagedResultDto<CampaignListDto>>.SuccessResponse(await _service.GetAllAsync(pagination, status), "Campaigns retrieved")); }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<PagedResultDto<CampaignListDto>>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<PagedResultDto<CampaignListDto>>.ErrorResponse("Error")); }
         }
 
         [RequirePermission("ArchiveCampaigns")]
@@ -29,7 +29,7 @@ namespace NexUs.Controllers
         public async Task<ActionResult<ApiResponse<PagedResultDto<CampaignListDto>>>> GetArchived([FromQuery] PaginationDto pagination)
         {
             try { return Ok(ApiResponse<PagedResultDto<CampaignListDto>>.SuccessResponse(await _service.GetArchivedAsync(pagination), "Archived campaigns retrieved")); }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<PagedResultDto<CampaignListDto>>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<PagedResultDto<CampaignListDto>>.ErrorResponse("Error")); }
         }
 
         [RequirePermission("ViewCampaigns")]
@@ -42,7 +42,7 @@ namespace NexUs.Controllers
                 if (result == null) return NotFound(ApiResponse<CampaignResponseDto>.ErrorResponse("Campaign not found"));
                 return Ok(ApiResponse<CampaignResponseDto>.SuccessResponse(result, "Campaign retrieved"));
             }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<CampaignResponseDto>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<CampaignResponseDto>.ErrorResponse("Error")); }
         }
 
         [RequirePermission("CreateCampaigns")]
@@ -56,7 +56,7 @@ namespace NexUs.Controllers
                 return CreatedAtAction(nameof(GetById), new { id = result.Id }, ApiResponse<CampaignResponseDto>.SuccessResponse(result, "Campaign created"));
             }
             catch (InvalidOperationException ex) { return BadRequest(ApiResponse<CampaignResponseDto>.ErrorResponse(ex.Message)); }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<CampaignResponseDto>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<CampaignResponseDto>.ErrorResponse("Error")); }
         }
 
         [RequirePermission("UpdateCampaigns")]
@@ -71,7 +71,7 @@ namespace NexUs.Controllers
                 return Ok(ApiResponse<CampaignResponseDto>.SuccessResponse(result, "Campaign updated"));
             }
             catch (InvalidOperationException ex) { return BadRequest(ApiResponse<CampaignResponseDto>.ErrorResponse(ex.Message)); }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<CampaignResponseDto>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<CampaignResponseDto>.ErrorResponse("Error")); }
         }
 
         [RequirePermission("DeleteCampaigns")]
@@ -84,7 +84,7 @@ namespace NexUs.Controllers
                 if (!await _service.DeleteAsync(id, userId)) return NotFound(ApiResponse<bool>.ErrorResponse("Campaign not found"));
                 return Ok(ApiResponse<bool>.SuccessResponse(true, "Campaign archived"));
             }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error")); }
         }
 
         [RequirePermission("RestoreCampaigns")]
@@ -97,7 +97,7 @@ namespace NexUs.Controllers
                 if (!await _service.RestoreAsync(id, userId)) return NotFound(ApiResponse<bool>.ErrorResponse("Campaign not found"));
                 return Ok(ApiResponse<bool>.SuccessResponse(true, "Campaign restored"));
             }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error")); }
         }
 
         [RequirePermission("PermanentDeleteCampaigns")]
@@ -109,7 +109,7 @@ namespace NexUs.Controllers
                 if (!await _service.PermanentDeleteAsync(id)) return NotFound(ApiResponse<bool>.ErrorResponse("Campaign not found"));
                 return Ok(ApiResponse<bool>.SuccessResponse(true, "Campaign permanently deleted"));
             }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error")); }
         }
 
         [RequirePermission("UpdateCampaigns")]
@@ -123,7 +123,7 @@ namespace NexUs.Controllers
                 return Ok(ApiResponse<BuildTargetsResultDto>.SuccessResponse(result, "Targets built successfully"));
             }
             catch (KeyNotFoundException ex) { return NotFound(ApiResponse<BuildTargetsResultDto>.ErrorResponse(ex.Message)); }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<BuildTargetsResultDto>.ErrorResponse("Error building targets", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<BuildTargetsResultDto>.ErrorResponse("Error building targets")); }
         }
 
         [RequirePermission("SendCampaigns")]
@@ -136,7 +136,7 @@ namespace NexUs.Controllers
                 if (!await _service.SendAsync(id, userId)) return NotFound(ApiResponse<bool>.ErrorResponse("Campaign not found"));
                 return Ok(ApiResponse<bool>.SuccessResponse(true, "Campaign queued for sending"));
             }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error")); }
         }
 
         [RequirePermission("UpdateCampaigns")]
@@ -149,7 +149,7 @@ namespace NexUs.Controllers
                 if (!await _service.ScheduleAsync(id, dto, userId)) return NotFound(ApiResponse<bool>.ErrorResponse("Campaign not found"));
                 return Ok(ApiResponse<bool>.SuccessResponse(true, "Campaign scheduled"));
             }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error")); }
         }
 
         [RequirePermission("UpdateCampaigns")]
@@ -162,7 +162,7 @@ namespace NexUs.Controllers
                 if (!await _service.CancelAsync(id, userId)) return NotFound(ApiResponse<bool>.ErrorResponse("Campaign not found"));
                 return Ok(ApiResponse<bool>.SuccessResponse(true, "Campaign cancelled"));
             }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error")); }
         }
 
         [RequirePermission("ViewCampaigns")]
@@ -170,7 +170,7 @@ namespace NexUs.Controllers
         public async Task<ActionResult<ApiResponse<PagedResultDto<CampaignTargetListDto>>>> GetTargets(int id, [FromQuery] PaginationDto pagination)
         {
             try { return Ok(ApiResponse<PagedResultDto<CampaignTargetListDto>>.SuccessResponse(await _service.GetTargetsAsync(id, pagination), "Targets retrieved")); }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<PagedResultDto<CampaignTargetListDto>>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<PagedResultDto<CampaignTargetListDto>>.ErrorResponse("Error")); }
         }
 
         [RequirePermission("ViewCampaigns")]
@@ -178,7 +178,7 @@ namespace NexUs.Controllers
         public async Task<ActionResult<ApiResponse<PagedResultDto<EmailMessageListDto>>>> GetMessages(int id, [FromQuery] PaginationDto pagination, [FromServices] IEmailMessageService messageService)
         {
             try { return Ok(ApiResponse<PagedResultDto<EmailMessageListDto>>.SuccessResponse(await messageService.GetAllAsync(pagination, null, id), "Messages retrieved")); }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<PagedResultDto<EmailMessageListDto>>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<PagedResultDto<EmailMessageListDto>>.ErrorResponse("Error")); }
         }
     }
 }

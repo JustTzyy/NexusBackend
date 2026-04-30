@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NexUs.Attributes;
 using NexUs.Extensions;
@@ -31,9 +31,9 @@ namespace NexUs.Controllers
                 var result = await _buildingService.GetAllBuildingsAsync(new PaginationDto { PageSize = 1000 });
                 return Ok(ApiResponse<PagedResultDto<BuildingListDto>>.SuccessResponse(result, "Buildings retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<BuildingListDto>>.ErrorResponse("An error occurred while retrieving buildings", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<BuildingListDto>>.ErrorResponse("An error occurred while retrieving buildings"));
             }
         }
 
@@ -49,9 +49,9 @@ namespace NexUs.Controllers
                 var result = await _buildingService.GetAllBuildingsAsync(pagination);
                 return Ok(ApiResponse<PagedResultDto<BuildingListDto>>.SuccessResponse(result, "Buildings retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<BuildingListDto>>.ErrorResponse("An error occurred while retrieving buildings", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<BuildingListDto>>.ErrorResponse("An error occurred while retrieving buildings"));
             }
         }
 
@@ -67,9 +67,9 @@ namespace NexUs.Controllers
                 var result = await _buildingService.GetArchivedBuildingsAsync(pagination);
                 return Ok(ApiResponse<PagedResultDto<BuildingListDto>>.SuccessResponse(result, "Archived buildings retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<BuildingListDto>>.ErrorResponse("An error occurred while retrieving archived buildings", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<BuildingListDto>>.ErrorResponse("An error occurred while retrieving archived buildings"));
             }
         }
 
@@ -85,9 +85,9 @@ namespace NexUs.Controllers
                 var result = await _buildingService.GetAvailableManagersAsync(excludeBuildingId);
                 return Ok(ApiResponse<List<AvailableManagerDto>>.SuccessResponse(result, "Available managers retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<List<AvailableManagerDto>>.ErrorResponse("An error occurred while retrieving available managers", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<List<AvailableManagerDto>>.ErrorResponse("An error occurred while retrieving available managers"));
             }
         }
 
@@ -106,9 +106,9 @@ namespace NexUs.Controllers
                 var result = await _buildingService.GetMyBuildingAsync(currentUserId.Value);
                 return Ok(ApiResponse<BuildingListDto?>.SuccessResponse(result, "My building retrieved"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<BuildingListDto?>.ErrorResponse("Failed to get my building", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<BuildingListDto?>.ErrorResponse("Failed to get my building"));
             }
         }
 
@@ -137,9 +137,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<BuildingListDto?>.SuccessResponse(result, "Recommended building retrieved"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<BuildingListDto?>.ErrorResponse("Failed to get recommended building", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<BuildingListDto?>.ErrorResponse("Failed to get recommended building"));
             }
         }
 
@@ -160,9 +160,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<BuildingResponseDto>.SuccessResponse(building, "Building retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<BuildingResponseDto>.ErrorResponse("An error occurred while retrieving building", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<BuildingResponseDto>.ErrorResponse("An error occurred while retrieving building"));
             }
         }
 
@@ -184,9 +184,9 @@ namespace NexUs.Controllers
             {
                 return BadRequest(ApiResponse<BuildingResponseDto>.ErrorResponse(ex.Message));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<BuildingResponseDto>.ErrorResponse("An error occurred while creating building", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<BuildingResponseDto>.ErrorResponse("An error occurred while creating building"));
             }
         }
 
@@ -212,9 +212,9 @@ namespace NexUs.Controllers
             {
                 return BadRequest(ApiResponse<BuildingResponseDto>.ErrorResponse(ex.Message));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<BuildingResponseDto>.ErrorResponse("An error occurred while updating building", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<BuildingResponseDto>.ErrorResponse("An error occurred while updating building"));
             }
         }
 
@@ -236,9 +236,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "Building deleted successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while deleting building", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while deleting building"));
             }
         }
 
@@ -260,9 +260,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "Building restored successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while restoring building", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while restoring building"));
             }
         }
 
@@ -284,9 +284,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "Building permanently deleted"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while permanently deleting building", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while permanently deleting building"));
             }
         }
     }

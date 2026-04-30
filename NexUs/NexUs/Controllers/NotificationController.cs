@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NexUs.Extensions;
 using NexUs.Models.DTO.Common;
@@ -24,7 +24,7 @@ namespace NexUs.Controllers
                 var currentUserId = HttpContext.GetCurrentUserId();
                 return Ok(ApiResponse<PagedResultDto<NotificationListDto>>.SuccessResponse(await _service.GetAllAsync(pagination, currentUserId, type), "Notifications retrieved"));
             }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<PagedResultDto<NotificationListDto>>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<PagedResultDto<NotificationListDto>>.ErrorResponse("Error")); }
         }
 
         [HttpGet("{id:int}")]
@@ -36,7 +36,7 @@ namespace NexUs.Controllers
                 if (result == null) return NotFound(ApiResponse<NotificationResponseDto>.ErrorResponse("Notification not found"));
                 return Ok(ApiResponse<NotificationResponseDto>.SuccessResponse(result, "Notification retrieved"));
             }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<NotificationResponseDto>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<NotificationResponseDto>.ErrorResponse("Error")); }
         }
 
         [HttpGet("unread-count")]
@@ -48,7 +48,7 @@ namespace NexUs.Controllers
                 if (userId == null) return Unauthorized(ApiResponse<NotificationCountDto>.ErrorResponse("User not authenticated"));
                 return Ok(ApiResponse<NotificationCountDto>.SuccessResponse(await _service.GetUnreadCountAsync(userId.Value), "Unread count retrieved"));
             }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<NotificationCountDto>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<NotificationCountDto>.ErrorResponse("Error")); }
         }
 
         [HttpPost]
@@ -60,7 +60,7 @@ namespace NexUs.Controllers
                 var result = await _service.CreateAsync(dto, userId);
                 return CreatedAtAction(nameof(GetById), new { id = result.Id }, ApiResponse<NotificationResponseDto>.SuccessResponse(result, "Notification created"));
             }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<NotificationResponseDto>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<NotificationResponseDto>.ErrorResponse("Error")); }
         }
 
         [HttpPut("{id:int}/read")]
@@ -71,7 +71,7 @@ namespace NexUs.Controllers
                 if (!await _service.MarkAsReadAsync(id)) return NotFound(ApiResponse<bool>.ErrorResponse("Notification not found"));
                 return Ok(ApiResponse<bool>.SuccessResponse(true, "Notification marked as read"));
             }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error")); }
         }
 
         [HttpPut("read-all")]
@@ -84,7 +84,7 @@ namespace NexUs.Controllers
                 var count = await _service.MarkAllAsReadAsync(userId.Value);
                 return Ok(ApiResponse<int>.SuccessResponse(count, $"{count} notifications marked as read"));
             }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<int>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<int>.ErrorResponse("Error")); }
         }
 
         [HttpDelete("{id:int}")]
@@ -95,7 +95,7 @@ namespace NexUs.Controllers
                 if (!await _service.DeleteAsync(id)) return NotFound(ApiResponse<bool>.ErrorResponse("Notification not found"));
                 return Ok(ApiResponse<bool>.SuccessResponse(true, "Notification deleted"));
             }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error")); }
         }
     }
 }

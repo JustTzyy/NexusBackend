@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NexUs.Attributes;
 using NexUs.Extensions;
@@ -21,7 +21,7 @@ namespace NexUs.Controllers
         public async Task<ActionResult<ApiResponse<PagedResultDto<LeadListDto>>>> GetAll([FromQuery] PaginationDto pagination, [FromQuery] string? status = null)
         {
             try { return Ok(ApiResponse<PagedResultDto<LeadListDto>>.SuccessResponse(await _service.GetAllAsync(pagination, status), "Leads retrieved")); }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<PagedResultDto<LeadListDto>>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<PagedResultDto<LeadListDto>>.ErrorResponse("Error")); }
         }
 
         [RequirePermission("ArchiveLeads")]
@@ -29,7 +29,7 @@ namespace NexUs.Controllers
         public async Task<ActionResult<ApiResponse<PagedResultDto<LeadListDto>>>> GetArchived([FromQuery] PaginationDto pagination)
         {
             try { return Ok(ApiResponse<PagedResultDto<LeadListDto>>.SuccessResponse(await _service.GetArchivedAsync(pagination), "Archived leads retrieved")); }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<PagedResultDto<LeadListDto>>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<PagedResultDto<LeadListDto>>.ErrorResponse("Error")); }
         }
 
         [RequirePermission("ViewLeads")]
@@ -42,7 +42,7 @@ namespace NexUs.Controllers
                 if (result == null) return NotFound(ApiResponse<LeadResponseDto>.ErrorResponse("Lead not found"));
                 return Ok(ApiResponse<LeadResponseDto>.SuccessResponse(result, "Lead retrieved"));
             }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<LeadResponseDto>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<LeadResponseDto>.ErrorResponse("Error")); }
         }
 
         [RequirePermission("CreateLeads")]
@@ -56,7 +56,7 @@ namespace NexUs.Controllers
                 return CreatedAtAction(nameof(GetById), new { id = result.Id }, ApiResponse<LeadResponseDto>.SuccessResponse(result, "Lead created"));
             }
             catch (InvalidOperationException ex) { return BadRequest(ApiResponse<LeadResponseDto>.ErrorResponse(ex.Message)); }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<LeadResponseDto>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<LeadResponseDto>.ErrorResponse("Error")); }
         }
 
         [RequirePermission("UpdateLeads")]
@@ -70,7 +70,7 @@ namespace NexUs.Controllers
                 if (result == null) return NotFound(ApiResponse<LeadResponseDto>.ErrorResponse("Lead not found"));
                 return Ok(ApiResponse<LeadResponseDto>.SuccessResponse(result, "Lead updated"));
             }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<LeadResponseDto>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<LeadResponseDto>.ErrorResponse("Error")); }
         }
 
         [RequirePermission("DeleteLeads")]
@@ -83,7 +83,7 @@ namespace NexUs.Controllers
                 if (!await _service.DeleteAsync(id, userId)) return NotFound(ApiResponse<bool>.ErrorResponse("Lead not found"));
                 return Ok(ApiResponse<bool>.SuccessResponse(true, "Lead archived"));
             }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error")); }
         }
 
         [RequirePermission("RestoreLeads")]
@@ -96,7 +96,7 @@ namespace NexUs.Controllers
                 if (!await _service.RestoreAsync(id, userId)) return NotFound(ApiResponse<bool>.ErrorResponse("Lead not found"));
                 return Ok(ApiResponse<bool>.SuccessResponse(true, "Lead restored"));
             }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error")); }
         }
 
         [RequirePermission("PermanentDeleteLeads")]
@@ -108,7 +108,7 @@ namespace NexUs.Controllers
                 if (!await _service.PermanentDeleteAsync(id)) return NotFound(ApiResponse<bool>.ErrorResponse("Lead not found"));
                 return Ok(ApiResponse<bool>.SuccessResponse(true, "Lead permanently deleted"));
             }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error")); }
         }
     }
 }

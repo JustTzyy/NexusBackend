@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NexUs.Attributes;
 using NexUs.Models.DTO.AuditLogs;
@@ -31,9 +31,9 @@ namespace NexUs.Controllers
                 var result = await _auditService.GetAllLogsAsync(pagination);
                 return Ok(ApiResponse<PagedResultDto<AuditLogListDto>>.SuccessResponse(result, "Audit logs retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<AuditLogListDto>>.ErrorResponse("An error occurred while retrieving audit logs", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<AuditLogListDto>>.ErrorResponse("An error occurred while retrieving audit logs"));
             }
         }
 
@@ -54,9 +54,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<AuditLogDetailDto>.SuccessResponse(log, "Audit log retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<AuditLogDetailDto>.ErrorResponse("An error occurred while retrieving audit log", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<AuditLogDetailDto>.ErrorResponse("An error occurred while retrieving audit log"));
             }
         }
     }

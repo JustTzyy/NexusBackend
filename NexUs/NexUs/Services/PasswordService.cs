@@ -1,38 +1,41 @@
+using System.Security.Cryptography;
 using NexUs.Services.Interfaces;
-using BCrypt.Net;
 
 namespace NexUs.Services
 {
     public class PasswordService : IPasswordService
     {
-        private const string PasswordChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
-        private readonly Random _random = new Random();
+        private const string LowerChars = "abcdefghijklmnopqrstuvwxyz";
+        private const string UpperChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        private const string DigitChars = "0123456789";
+        private const string SpecialChars = "!@#$%^&*";
+        private const string AllChars = LowerChars + UpperChars + DigitChars + SpecialChars;
 
         public string GeneratePassword()
         {
-            // Generate password between 8-12 characters
-            int length = _random.Next(8, 13);
-            var password = new char[length];
+            int length = RandomNumberGenerator.GetInt32(10, 15);
+            var chars = new char[length];
 
-            // Ensure at least one of each type
-            password[0] = "abcdefghijklmnopqrstuvwxyz"[_random.Next(26)]; // lowercase
-            password[1] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[_random.Next(26)]; // uppercase
-            password[2] = "0123456789"[_random.Next(10)]; // digit
-            password[3] = "!@#$%^&*"[_random.Next(8)]; // special char
+            chars[0] = LowerChars[RandomNumberGenerator.GetInt32(LowerChars.Length)];
+            chars[1] = UpperChars[RandomNumberGenerator.GetInt32(UpperChars.Length)];
+            chars[2] = DigitChars[RandomNumberGenerator.GetInt32(DigitChars.Length)];
+            chars[3] = SpecialChars[RandomNumberGenerator.GetInt32(SpecialChars.Length)];
 
-            // Fill remaining with random characters
             for (int i = 4; i < length; i++)
+                chars[i] = AllChars[RandomNumberGenerator.GetInt32(AllChars.Length)];
+
+            // Cryptographically shuffle
+            for (int i = length - 1; i > 0; i--)
             {
-                password[i] = PasswordChars[_random.Next(PasswordChars.Length)];
+                int j = RandomNumberGenerator.GetInt32(i + 1);
+                (chars[i], chars[j]) = (chars[j], chars[i]);
             }
 
-            // Shuffle the password
-            return new string(password.OrderBy(x => _random.Next()).ToArray());
+            return new string(chars);
         }
 
         public string HashPassword(string password)
         {
-            // Use BCrypt with work factor of 12 (recommended)
             return BCrypt.Net.BCrypt.HashPassword(password, 12);
         }
 

@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NexUs.Data;
@@ -63,11 +63,9 @@ public class LandingPageController : ControllerBase
 
             return Ok(ApiResponse<LandingPageStatsDto>.SuccessResponse(stats, "Landing page stats retrieved successfully"));
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            return StatusCode(500, ApiResponse<LandingPageStatsDto>.ErrorResponse(
-                "Failed to retrieve landing page stats",
-                new List<string> { ex.Message }));
+            return StatusCode(500, ApiResponse<LandingPageStatsDto>.ErrorResponse("An unexpected error occurred"));
         }
     }
 
@@ -96,11 +94,9 @@ public class LandingPageController : ControllerBase
 
             return Ok(ApiResponse<List<LandingFeedbackDto>>.SuccessResponse(feedbacks, "Feedbacks retrieved successfully"));
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            return StatusCode(500, ApiResponse<List<LandingFeedbackDto>>.ErrorResponse(
-                "Failed to retrieve feedbacks",
-                new List<string> { ex.Message }));
+            return StatusCode(500, ApiResponse<List<LandingFeedbackDto>>.ErrorResponse("An unexpected error occurred"));
         }
     }
 }

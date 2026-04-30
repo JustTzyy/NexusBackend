@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NexUs.Attributes;
 using NexUs.Models.DTO.Common;
@@ -20,7 +20,7 @@ namespace NexUs.Controllers
         public async Task<ActionResult<ApiResponse<PagedResultDto<CustomerListDto>>>> GetAll([FromQuery] PaginationDto pagination)
         {
             try { return Ok(ApiResponse<PagedResultDto<CustomerListDto>>.SuccessResponse(await _service.GetAllAsync(pagination), "Customers retrieved")); }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<PagedResultDto<CustomerListDto>>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<PagedResultDto<CustomerListDto>>.ErrorResponse("Error")); }
         }
 
         [RequirePermission("ViewCustomers")]
@@ -33,7 +33,7 @@ namespace NexUs.Controllers
                 if (result == null) return NotFound(ApiResponse<CustomerResponseDto>.ErrorResponse("Customer not found"));
                 return Ok(ApiResponse<CustomerResponseDto>.SuccessResponse(result, "Customer retrieved"));
             }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<CustomerResponseDto>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<CustomerResponseDto>.ErrorResponse("Error")); }
         }
     }
 }

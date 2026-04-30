@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NexUs.Attributes;
 using NexUs.Extensions;
@@ -28,9 +28,9 @@ namespace NexUs.Controllers
                 var result = await _departmentService.GetAllDepartmentsAsync(new PaginationDto { PageSize = 1000 });
                 return Ok(ApiResponse<PagedResultDto<DepartmentListDto>>.SuccessResponse(result, "Departments retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<DepartmentListDto>>.ErrorResponse("An error occurred while retrieving departments", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<DepartmentListDto>>.ErrorResponse("An error occurred while retrieving departments"));
             }
         }
 
@@ -43,9 +43,9 @@ namespace NexUs.Controllers
                 var result = await _departmentService.GetAllDepartmentsAsync(pagination);
                 return Ok(ApiResponse<PagedResultDto<DepartmentListDto>>.SuccessResponse(result, "Departments retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<DepartmentListDto>>.ErrorResponse("An error occurred while retrieving departments", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<DepartmentListDto>>.ErrorResponse("An error occurred while retrieving departments"));
             }
         }
 
@@ -58,9 +58,9 @@ namespace NexUs.Controllers
                 var result = await _departmentService.GetArchivedDepartmentsAsync(pagination);
                 return Ok(ApiResponse<PagedResultDto<DepartmentListDto>>.SuccessResponse(result, "Archived departments retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<DepartmentListDto>>.ErrorResponse("An error occurred while retrieving archived departments", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<DepartmentListDto>>.ErrorResponse("An error occurred while retrieving archived departments"));
             }
         }
 
@@ -78,9 +78,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<DepartmentResponseDto>.SuccessResponse(department, "Department retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<DepartmentResponseDto>.ErrorResponse("An error occurred while retrieving department", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<DepartmentResponseDto>.ErrorResponse("An error occurred while retrieving department"));
             }
         }
 
@@ -99,9 +99,9 @@ namespace NexUs.Controllers
             {
                 return BadRequest(ApiResponse<DepartmentResponseDto>.ErrorResponse(ex.Message));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<DepartmentResponseDto>.ErrorResponse("An error occurred while creating department", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<DepartmentResponseDto>.ErrorResponse("An error occurred while creating department"));
             }
         }
 
@@ -124,9 +124,9 @@ namespace NexUs.Controllers
             {
                 return BadRequest(ApiResponse<DepartmentResponseDto>.ErrorResponse(ex.Message));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<DepartmentResponseDto>.ErrorResponse("An error occurred while updating department", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<DepartmentResponseDto>.ErrorResponse("An error occurred while updating department"));
             }
         }
 
@@ -145,9 +145,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "Department deleted successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while deleting department", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while deleting department"));
             }
         }
 
@@ -166,9 +166,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "Department restored successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while restoring department", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while restoring department"));
             }
         }
 
@@ -187,9 +187,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "Department permanently deleted"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while permanently deleting department", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while permanently deleting department"));
             }
         }
     }

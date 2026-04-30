@@ -108,10 +108,12 @@ namespace NexUs.Services
             };
         }
 
-        public async Task<FeedbackResponseDto?> GetByIdAsync(int id)
+        public async Task<FeedbackResponseDto?> GetByIdAsync(int id, int? requesterId = null, bool isAdmin = false)
         {
             var f = await BaseQuery().FirstOrDefaultAsync(f => f.Id == id && f.DeletedAt == null);
-            return f == null ? null : ToResponseDto(f);
+            if (f == null) return null;
+            if (requesterId.HasValue && !isAdmin && f.CustomerId != requesterId.Value) return null;
+            return ToResponseDto(f);
         }
 
         public async Task<bool> CanSubmitFeedbackAsync(int customerId, int sessionLogId)
@@ -208,10 +210,12 @@ namespace NexUs.Services
             return (await GetByIdAsync(feedback.Id))!;
         }
 
-        public async Task<FeedbackResponseDto?> UpdateAsync(int id, UpdateFeedbackDto dto, int userId)
+        public async Task<FeedbackResponseDto?> UpdateAsync(int id, UpdateFeedbackDto dto, int userId, bool isAdmin = false)
         {
             var feedback = await _context.Feedbacks.FirstOrDefaultAsync(f => f.Id == id && f.DeletedAt == null);
             if (feedback == null) return null;
+            if (!isAdmin && feedback.CustomerId != userId)
+                throw new UnauthorizedAccessException("You can only edit your own feedback.");
 
             if (dto.Rating.HasValue) feedback.Rating = dto.Rating.Value;
             if (dto.Comment != null) feedback.Comment = dto.Comment;
@@ -221,10 +225,12 @@ namespace NexUs.Services
             return await GetByIdAsync(id);
         }
 
-        public async Task<bool> DeleteAsync(int id, int userId)
+        public async Task<bool> DeleteAsync(int id, int userId, bool isAdmin = false)
         {
             var feedback = await _context.Feedbacks.FirstOrDefaultAsync(f => f.Id == id && f.DeletedAt == null);
             if (feedback == null) return false;
+            if (!isAdmin && feedback.CustomerId != userId)
+                throw new UnauthorizedAccessException("You can only delete your own feedback.");
 
             feedback.DeletedAt = DateTimeHelper.PhilippineNow;
             feedback.UpdatedBy = userId;

@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NexUs.Attributes;
@@ -55,10 +55,10 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<TeacherAvailabilityResultDto>.SuccessResponse(result, "Availability retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500, ApiResponse<TeacherAvailabilityResultDto>.ErrorResponse(
-                    "An error occurred while retrieving availability", new List<string> { ex.Message }));
+                    "An error occurred while retrieving availability"));
             }
         }
 
@@ -103,10 +103,10 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<TeacherAvailabilityResultDto>.SuccessResponse(result, "Availability retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500, ApiResponse<TeacherAvailabilityResultDto>.ErrorResponse(
-                    "An error occurred while retrieving availability", new List<string> { ex.Message }));
+                    "An error occurred while retrieving availability"));
             }
         }
 
@@ -124,7 +124,7 @@ namespace NexUs.Controllers
             {
                 var currentUserId = HttpContext.GetCurrentUserId();
 
-                // ── Guard: check if any slot being removed has an active scheduled session ──
+                // â”€â”€ Guard: check if any slot being removed has an active scheduled session â”€â”€
                 var activeStatuses = new[] { "Confirmed", "Waiting for Teacher Approval", "Teacher Assigned" };
 
                 // Build the set of slots the incoming request contains
@@ -132,7 +132,7 @@ namespace NexUs.Controllers
                     .Select(s => $"{s.DayId}-{s.TimeSlotId}")
                     .ToHashSet();
 
-                // Slots that currently exist but are NOT in the incoming set → being removed
+                // Slots that currently exist but are NOT in the incoming set â†’ being removed
                 var currentSlots = await _context.TeacherAvailabilities
                     .Where(a => a.TeacherId == teacherId && a.DeletedAt == null)
                     .Select(a => new { a.AvailableDayId, a.AvailableTimeSlotId })
@@ -162,7 +162,7 @@ namespace NexUs.Controllers
                                 t.Id,
                                 DayName = t.AvailableDay != null ? t.AvailableDay.DayName : "Unknown day",
                                 TimeSlot = t.AvailableTimeSlot != null
-                                    ? $"{t.AvailableTimeSlot.StartTime} – {t.AvailableTimeSlot.EndTime}"
+                                    ? $"{t.AvailableTimeSlot.StartTime} â€“ {t.AvailableTimeSlot.EndTime}"
                                     : "Unknown time",
                                 t.Status,
                             })
@@ -184,7 +184,7 @@ namespace NexUs.Controllers
                     }
                 }
 
-                // ── Proceed with the update ──
+                // â”€â”€ Proceed with the update â”€â”€
 
                 // Remove all existing rows for this teacher
                 var existing = await _context.TeacherAvailabilities
@@ -244,10 +244,10 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<TeacherAvailabilityResultDto>.SuccessResponse(result, "Availability updated successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500, ApiResponse<TeacherAvailabilityResultDto>.ErrorResponse(
-                    "An error occurred while updating availability", new List<string> { ex.Message }));
+                    "An error occurred while updating availability"));
             }
         }
     }

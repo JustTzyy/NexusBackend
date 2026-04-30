@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NexUs.Attributes;
 using NexUs.Extensions;
@@ -33,9 +33,9 @@ namespace NexUs.Controllers
                 var result = await _roleService.GetAllRolesAsync(pagination);
                 return Ok(ApiResponse<PagedResultDto<RoleListDto>>.SuccessResponse(result, "Roles retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<RoleListDto>>.ErrorResponse("An error occurred while retrieving roles", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<RoleListDto>>.ErrorResponse("An error occurred while retrieving roles"));
             }
         }
 
@@ -56,9 +56,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<RoleResponseDto>.SuccessResponse(role, "Role retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<RoleResponseDto>.ErrorResponse("An error occurred while retrieving role", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<RoleResponseDto>.ErrorResponse("An error occurred while retrieving role"));
             }
         }
 
@@ -74,9 +74,9 @@ namespace NexUs.Controllers
                 var permissions = await _roleService.GetRolePermissionsAsync(id);
                 return Ok(ApiResponse<List<PermissionListDto>>.SuccessResponse(permissions, "Role permissions retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<List<PermissionListDto>>.ErrorResponse("An error occurred while retrieving role permissions", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<List<PermissionListDto>>.ErrorResponse("An error occurred while retrieving role permissions"));
             }
         }
 
@@ -92,9 +92,9 @@ namespace NexUs.Controllers
                 var result = await _roleService.GetArchivedRolesAsync(pagination);
                 return Ok(ApiResponse<PagedResultDto<RoleListDto>>.SuccessResponse(result, "Archived roles retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<RoleListDto>>.ErrorResponse("An error occurred while retrieving archived roles", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<RoleListDto>>.ErrorResponse("An error occurred while retrieving archived roles"));
             }
         }
 
@@ -116,9 +116,9 @@ namespace NexUs.Controllers
             {
                 return BadRequest(ApiResponse<RoleResponseDto>.ErrorResponse(ex.Message));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<RoleResponseDto>.ErrorResponse("An error occurred while creating role", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<RoleResponseDto>.ErrorResponse("An error occurred while creating role"));
             }
         }
 
@@ -144,9 +144,9 @@ namespace NexUs.Controllers
             {
                 return BadRequest(ApiResponse<RoleResponseDto>.ErrorResponse(ex.Message));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<RoleResponseDto>.ErrorResponse("An error occurred while updating role", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<RoleResponseDto>.ErrorResponse("An error occurred while updating role"));
             }
         }
 
@@ -168,9 +168,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "Role deleted successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while deleting role", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while deleting role"));
             }
         }
 
@@ -192,9 +192,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "Role restored successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while restoring role", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while restoring role"));
             }
         }
 
@@ -216,9 +216,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "Role permanently deleted"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while permanently deleting role", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while permanently deleting role"));
             }
         }
 
@@ -240,9 +240,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "Permissions assigned successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while assigning permissions", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while assigning permissions"));
             }
         }
     }

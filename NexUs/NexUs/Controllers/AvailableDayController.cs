@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NexUs.Attributes;
 using NexUs.Extensions;
@@ -31,9 +31,9 @@ namespace NexUs.Controllers
                 var result = await _availableDayService.GetAllAvailableDaysAsync(new PaginationDto { PageNumber = 1, PageSize = 200 });
                 return Ok(ApiResponse<PagedResultDto<AvailableDayListDto>>.SuccessResponse(result, "Available days retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<AvailableDayListDto>>.ErrorResponse("An error occurred while retrieving available days", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<AvailableDayListDto>>.ErrorResponse("An error occurred while retrieving available days"));
             }
         }
 
@@ -46,9 +46,9 @@ namespace NexUs.Controllers
                 var result = await _availableDayService.GetAllAvailableDaysAsync(pagination);
                 return Ok(ApiResponse<PagedResultDto<AvailableDayListDto>>.SuccessResponse(result, "Available days retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<AvailableDayListDto>>.ErrorResponse("An error occurred while retrieving available days", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<AvailableDayListDto>>.ErrorResponse("An error occurred while retrieving available days"));
             }
         }
 
@@ -61,9 +61,9 @@ namespace NexUs.Controllers
                 var result = await _availableDayService.GetArchivedAvailableDaysAsync(pagination);
                 return Ok(ApiResponse<PagedResultDto<AvailableDayListDto>>.SuccessResponse(result, "Archived available days retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<AvailableDayListDto>>.ErrorResponse("An error occurred while retrieving archived available days", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<AvailableDayListDto>>.ErrorResponse("An error occurred while retrieving archived available days"));
             }
         }
 
@@ -81,9 +81,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<AvailableDayResponseDto>.SuccessResponse(day, "Available day retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<AvailableDayResponseDto>.ErrorResponse("An error occurred while retrieving available day", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<AvailableDayResponseDto>.ErrorResponse("An error occurred while retrieving available day"));
             }
         }
 
@@ -102,9 +102,9 @@ namespace NexUs.Controllers
             {
                 return BadRequest(ApiResponse<AvailableDayResponseDto>.ErrorResponse(ex.Message));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<AvailableDayResponseDto>.ErrorResponse("An error occurred while creating available day", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<AvailableDayResponseDto>.ErrorResponse("An error occurred while creating available day"));
             }
         }
 
@@ -127,9 +127,9 @@ namespace NexUs.Controllers
             {
                 return BadRequest(ApiResponse<AvailableDayResponseDto>.ErrorResponse(ex.Message));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<AvailableDayResponseDto>.ErrorResponse("An error occurred while updating available day", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<AvailableDayResponseDto>.ErrorResponse("An error occurred while updating available day"));
             }
         }
 
@@ -148,9 +148,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "Available day deleted successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while deleting available day", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while deleting available day"));
             }
         }
 
@@ -169,9 +169,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "Available day restored successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while restoring available day", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while restoring available day"));
             }
         }
 
@@ -190,9 +190,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "Available day permanently deleted"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while permanently deleting available day", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while permanently deleting available day"));
             }
         }
     }

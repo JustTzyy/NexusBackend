@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NexUs.Attributes;
 using NexUs.Extensions;
@@ -32,9 +32,9 @@ namespace NexUs.Controllers
                 var result = await _permissionService.GetAllPermissionsAsync(pagination);
                 return Ok(ApiResponse<PagedResultDto<PermissionListDto>>.SuccessResponse(result, "Permissions retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<PermissionListDto>>.ErrorResponse("An error occurred while retrieving permissions", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<PermissionListDto>>.ErrorResponse("An error occurred while retrieving permissions"));
             }
         }
 
@@ -55,9 +55,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<PermissionResponseDto>.SuccessResponse(permission, "Permission retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PermissionResponseDto>.ErrorResponse("An error occurred while retrieving permission", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PermissionResponseDto>.ErrorResponse("An error occurred while retrieving permission"));
             }
         }
 
@@ -73,9 +73,9 @@ namespace NexUs.Controllers
                 var permissions = await _permissionService.GetPermissionsByModuleAsync(module);
                 return Ok(ApiResponse<List<PermissionListDto>>.SuccessResponse(permissions, "Permissions retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<List<PermissionListDto>>.ErrorResponse("An error occurred while retrieving permissions", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<List<PermissionListDto>>.ErrorResponse("An error occurred while retrieving permissions"));
             }
         }
 
@@ -91,9 +91,9 @@ namespace NexUs.Controllers
                 var result = await _permissionService.GetArchivedPermissionsAsync(pagination);
                 return Ok(ApiResponse<PagedResultDto<PermissionListDto>>.SuccessResponse(result, "Archived permissions retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<PermissionListDto>>.ErrorResponse("An error occurred while retrieving archived permissions", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<PermissionListDto>>.ErrorResponse("An error occurred while retrieving archived permissions"));
             }
         }
 
@@ -115,9 +115,9 @@ namespace NexUs.Controllers
             {
                 return BadRequest(ApiResponse<PermissionResponseDto>.ErrorResponse(ex.Message));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PermissionResponseDto>.ErrorResponse("An error occurred while creating permission", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PermissionResponseDto>.ErrorResponse("An error occurred while creating permission"));
             }
         }
 
@@ -143,9 +143,9 @@ namespace NexUs.Controllers
             {
                 return BadRequest(ApiResponse<PermissionResponseDto>.ErrorResponse(ex.Message));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PermissionResponseDto>.ErrorResponse("An error occurred while updating permission", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PermissionResponseDto>.ErrorResponse("An error occurred while updating permission"));
             }
         }
 
@@ -167,9 +167,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "Permission deleted successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while deleting permission", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while deleting permission"));
             }
         }
 
@@ -191,9 +191,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "Permission restored successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while restoring permission", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while restoring permission"));
             }
         }
 
@@ -215,9 +215,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "Permission permanently deleted"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while permanently deleting permission", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while permanently deleting permission"));
             }
         }
     }

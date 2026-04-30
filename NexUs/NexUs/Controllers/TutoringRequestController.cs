@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NexUs.Attributes;
 using NexUs.Extensions;
@@ -34,9 +34,9 @@ namespace NexUs.Controllers
                 var result = await _tutoringRequestService.GetStudentRequestsAsync(userId.Value, pagination);
                 return Ok(ApiResponse<PagedResultDto<TutoringRequestListDto>>.SuccessResponse(result, "Requests retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<TutoringRequestListDto>>.ErrorResponse("An error occurred while retrieving requests", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<TutoringRequestListDto>>.ErrorResponse("An error occurred while retrieving requests"));
             }
         }
 
@@ -53,9 +53,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<TutoringRequestStudentDto>.SuccessResponse(result, "Request retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<TutoringRequestStudentDto>.ErrorResponse("An error occurred", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<TutoringRequestStudentDto>.ErrorResponse("An error occurred"));
             }
         }
 
@@ -75,9 +75,9 @@ namespace NexUs.Controllers
             {
                 return BadRequest(ApiResponse<TutoringRequestResponseDto>.ErrorResponse(ex.Message));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<TutoringRequestResponseDto>.ErrorResponse("An error occurred while creating request", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<TutoringRequestResponseDto>.ErrorResponse("An error occurred while creating request"));
             }
         }
 
@@ -98,9 +98,9 @@ namespace NexUs.Controllers
             {
                 return BadRequest(ApiResponse<TutoringRequestResponseDto>.ErrorResponse(ex.Message));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<TutoringRequestResponseDto>.ErrorResponse("An error occurred while updating request", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<TutoringRequestResponseDto>.ErrorResponse("An error occurred while updating request"));
             }
         }
 
@@ -121,9 +121,9 @@ namespace NexUs.Controllers
             {
                 return BadRequest(ApiResponse<object>.ErrorResponse(ex.Message));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while cancelling request", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while cancelling request"));
             }
         }
 
@@ -140,9 +140,9 @@ namespace NexUs.Controllers
                 var result = await _tutoringRequestService.GetMyEnrolledSessionsAsync(userId.Value, pagination);
                 return Ok(ApiResponse<PagedResultDto<TutoringRequestListDto>>.SuccessResponse(result, "Enrolled sessions retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<TutoringRequestListDto>>.ErrorResponse("An error occurred", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<TutoringRequestListDto>>.ErrorResponse("An error occurred"));
             }
         }
 
@@ -157,9 +157,9 @@ namespace NexUs.Controllers
                 var result = await _tutoringRequestService.GetAvailableSessionsForStudentAsync(userId.Value, pagination);
                 return Ok(ApiResponse<PagedResultDto<TutoringRequestListDto>>.SuccessResponse(result, "Available sessions retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<TutoringRequestListDto>>.ErrorResponse("An error occurred", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<TutoringRequestListDto>>.ErrorResponse("An error occurred"));
             }
         }
 
@@ -178,9 +178,9 @@ namespace NexUs.Controllers
             {
                 return BadRequest(ApiResponse<object>.ErrorResponse(ex.Message));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred"));
             }
         }
 
@@ -198,9 +198,9 @@ namespace NexUs.Controllers
                 var result = await _tutoringRequestService.GetAvailableRequestsForTeacherAsync(userId.Value, pagination);
                 return Ok(ApiResponse<PagedResultDto<TutoringRequestListDto>>.SuccessResponse(result, "Available requests retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<TutoringRequestListDto>>.ErrorResponse("An error occurred", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<TutoringRequestListDto>>.ErrorResponse("An error occurred"));
             }
         }
 
@@ -220,9 +220,9 @@ namespace NexUs.Controllers
             {
                 return BadRequest(ApiResponse<object>.ErrorResponse(ex.Message));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred"));
             }
         }
 
@@ -238,9 +238,9 @@ namespace NexUs.Controllers
                 var result = await _tutoringRequestService.GetTeacherInterestHistoryAsync(userId.Value, pagination);
                 return Ok(ApiResponse<PagedResultDto<TutoringRequestListDto>>.SuccessResponse(result, "Interest history retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<TutoringRequestListDto>>.ErrorResponse("An error occurred", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<TutoringRequestListDto>>.ErrorResponse("An error occurred"));
             }
         }
 
@@ -261,9 +261,9 @@ namespace NexUs.Controllers
             {
                 return BadRequest(ApiResponse<object>.ErrorResponse(ex.Message));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred"));
             }
         }
 
@@ -284,9 +284,9 @@ namespace NexUs.Controllers
             {
                 return BadRequest(ApiResponse<object>.ErrorResponse(ex.Message));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred"));
             }
         }
 
@@ -308,9 +308,9 @@ namespace NexUs.Controllers
             {
                 return BadRequest(ApiResponse<object>.ErrorResponse(ex.Message));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred"));
             }
         }
 
@@ -333,9 +333,9 @@ namespace NexUs.Controllers
             {
                 return BadRequest(ApiResponse<TutoringRequestResponseDto>.ErrorResponse(ex.Message));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<TutoringRequestResponseDto>.ErrorResponse("An error occurred while creating request", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<TutoringRequestResponseDto>.ErrorResponse("An error occurred while creating request"));
             }
         }
 
@@ -349,9 +349,9 @@ namespace NexUs.Controllers
                 var result = await _tutoringRequestService.GetConflictDataAsync(teacherId, excludeRequestId);
                 return Ok(ApiResponse<ConflictCheckResultDto>.SuccessResponse(result, "Conflict data retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<ConflictCheckResultDto>.ErrorResponse("An error occurred", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<ConflictCheckResultDto>.ErrorResponse("An error occurred"));
             }
         }
 
@@ -365,9 +365,9 @@ namespace NexUs.Controllers
                 var history = await _tutoringRequestService.GetAllStatusHistoryAsync();
                 return Ok(ApiResponse<List<TutoringRequestStatusHistoryDto>>.SuccessResponse(history, "Status history retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<List<TutoringRequestStatusHistoryDto>>.ErrorResponse("An error occurred", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<List<TutoringRequestStatusHistoryDto>>.ErrorResponse("An error occurred"));
             }
         }
 
@@ -380,9 +380,9 @@ namespace NexUs.Controllers
                 var result = await _tutoringRequestService.GetAllRequestsAsync(pagination);
                 return Ok(ApiResponse<PagedResultDto<TutoringRequestListDto>>.SuccessResponse(result, "Requests retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<TutoringRequestListDto>>.ErrorResponse("An error occurred", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<TutoringRequestListDto>>.ErrorResponse("An error occurred"));
             }
         }
 
@@ -397,9 +397,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<TutoringRequestResponseDto>.SuccessResponse(result, "Request retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<TutoringRequestResponseDto>.ErrorResponse("An error occurred", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<TutoringRequestResponseDto>.ErrorResponse("An error occurred"));
             }
         }
 
@@ -419,9 +419,9 @@ namespace NexUs.Controllers
             {
                 return BadRequest(ApiResponse<object>.ErrorResponse(ex.Message));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred"));
             }
         }
 
@@ -443,9 +443,9 @@ namespace NexUs.Controllers
             {
                 return BadRequest(ApiResponse<TutoringRequestResponseDto>.ErrorResponse(ex.Message));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<TutoringRequestResponseDto>.ErrorResponse("An error occurred", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<TutoringRequestResponseDto>.ErrorResponse("An error occurred"));
             }
         }
 
@@ -467,9 +467,9 @@ namespace NexUs.Controllers
             {
                 return BadRequest(ApiResponse<object>.ErrorResponse(ex.Message));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred"));
             }
         }
 
@@ -491,9 +491,9 @@ namespace NexUs.Controllers
             {
                 return BadRequest(ApiResponse<object>.ErrorResponse(ex.Message));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred"));
             }
         }
 
@@ -509,9 +509,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "Request deleted successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred"));
             }
         }
 
@@ -527,9 +527,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "Request restored successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred"));
             }
         }
     }

@@ -152,12 +152,18 @@ namespace NexUs.Services
             };
         }
 
-        public async Task<SessionLogResponseDto?> UpdateAsync(int id, UpdateSessionLogDto dto, int? userId)
+        public async Task<SessionLogResponseDto?> UpdateAsync(int id, UpdateSessionLogDto dto, int? userId, bool isAdmin = false)
         {
             var log = await _context.SessionLogs
+                .Include(s => s.TutoringRequest)
                 .FirstOrDefaultAsync(s => s.Id == id && s.DeletedAt == null);
 
             if (log == null) return null;
+
+            if (!isAdmin && log.TutoringRequest != null &&
+                log.TutoringRequest.AssignedTeacherId != userId &&
+                log.TutoringRequest.StudentId != userId)
+                throw new UnauthorizedAccessException("You do not have permission to update this session log.");
 
             if (dto.Outcome != null) log.Outcome = dto.Outcome;
             if (dto.AbsentParty != null) log.AbsentParty = dto.AbsentParty;
@@ -187,12 +193,18 @@ namespace NexUs.Services
             };
         }
 
-        public async Task<bool> DeleteAsync(int id, int? userId)
+        public async Task<bool> DeleteAsync(int id, int? userId, bool isAdmin = false)
         {
             var log = await _context.SessionLogs
+                .Include(s => s.TutoringRequest)
                 .FirstOrDefaultAsync(s => s.Id == id && s.DeletedAt == null);
 
             if (log == null) return false;
+
+            if (!isAdmin && log.TutoringRequest != null &&
+                log.TutoringRequest.AssignedTeacherId != userId &&
+                log.TutoringRequest.StudentId != userId)
+                throw new UnauthorizedAccessException("You do not have permission to delete this session log.");
 
             log.DeletedAt = DateTime.UtcNow;
             log.UpdatedBy = userId;

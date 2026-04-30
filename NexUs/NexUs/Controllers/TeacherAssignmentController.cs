@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NexUs.Attributes;
@@ -41,10 +41,10 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(new { hasAssignment }, "Teacher assignment status retrieved"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500, ApiResponse<object>.ErrorResponse(
-                    "An error occurred while checking teacher assignments", new List<string> { ex.Message }));
+                    "An error occurred while checking teacher assignments"));
             }
         }
 
@@ -57,9 +57,9 @@ namespace NexUs.Controllers
                 var result = await _teacherAssignmentService.GetAllTeacherAssignmentsAsync(pagination);
                 return Ok(ApiResponse<PagedResultDto<TeacherAssignmentListDto>>.SuccessResponse(result, "Teacher assignments retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<TeacherAssignmentListDto>>.ErrorResponse("An error occurred while retrieving teacher assignments", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<TeacherAssignmentListDto>>.ErrorResponse("An error occurred while retrieving teacher assignments"));
             }
         }
 
@@ -72,9 +72,9 @@ namespace NexUs.Controllers
                 var result = await _teacherAssignmentService.GetArchivedTeacherAssignmentsAsync(pagination);
                 return Ok(ApiResponse<PagedResultDto<TeacherAssignmentListDto>>.SuccessResponse(result, "Archived teacher assignments retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<TeacherAssignmentListDto>>.ErrorResponse("An error occurred while retrieving archived teacher assignments", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<TeacherAssignmentListDto>>.ErrorResponse("An error occurred while retrieving archived teacher assignments"));
             }
         }
 
@@ -92,9 +92,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<TeacherAssignmentResponseDto>.SuccessResponse(assignment, "Teacher assignment retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<TeacherAssignmentResponseDto>.ErrorResponse("An error occurred while retrieving teacher assignment", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<TeacherAssignmentResponseDto>.ErrorResponse("An error occurred while retrieving teacher assignment"));
             }
         }
 
@@ -113,9 +113,9 @@ namespace NexUs.Controllers
             {
                 return BadRequest(ApiResponse<TeacherAssignmentResponseDto>.ErrorResponse(ex.Message));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<TeacherAssignmentResponseDto>.ErrorResponse("An error occurred while creating teacher assignment", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<TeacherAssignmentResponseDto>.ErrorResponse("An error occurred while creating teacher assignment"));
             }
         }
 
@@ -138,9 +138,9 @@ namespace NexUs.Controllers
             {
                 return BadRequest(ApiResponse<TeacherAssignmentResponseDto>.ErrorResponse(ex.Message));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<TeacherAssignmentResponseDto>.ErrorResponse("An error occurred while updating teacher assignment", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<TeacherAssignmentResponseDto>.ErrorResponse("An error occurred while updating teacher assignment"));
             }
         }
 
@@ -159,9 +159,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "Teacher assignment deleted successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while deleting teacher assignment", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while deleting teacher assignment"));
             }
         }
 
@@ -180,9 +180,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "Teacher assignment restored successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while restoring teacher assignment", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while restoring teacher assignment"));
             }
         }
 
@@ -201,9 +201,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "Teacher assignment permanently deleted"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while permanently deleting teacher assignment", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while permanently deleting teacher assignment"));
             }
         }
     }

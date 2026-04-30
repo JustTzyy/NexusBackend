@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NexUs.Data;
@@ -143,10 +143,10 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<TeacherDashboardDto>.SuccessResponse(summary, "Teacher dashboard summary retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500, ApiResponse<TeacherDashboardDto>.ErrorResponse(
-                    "An error occurred while retrieving dashboard summary", new List<string> { ex.Message }));
+                    "An error occurred while retrieving dashboard summary"));
             }
         }
     }

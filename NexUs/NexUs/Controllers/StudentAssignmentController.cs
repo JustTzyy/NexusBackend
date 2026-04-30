@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NexUs.Attributes;
 using NexUs.Extensions;
@@ -32,9 +32,9 @@ namespace NexUs.Controllers
                 var result = await _service.GetAllAsync(pagination);
                 return Ok(ApiResponse<PagedResultDto<StudentAssignmentListDto>>.SuccessResponse(result, "Student assignments retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<StudentAssignmentListDto>>.ErrorResponse("An error occurred", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<StudentAssignmentListDto>>.ErrorResponse("An error occurred"));
             }
         }
 
@@ -50,9 +50,9 @@ namespace NexUs.Controllers
                 var result = await _service.GetArchivedAsync(pagination);
                 return Ok(ApiResponse<PagedResultDto<StudentAssignmentListDto>>.SuccessResponse(result, "Archived student assignments retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<StudentAssignmentListDto>>.ErrorResponse("An error occurred", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<StudentAssignmentListDto>>.ErrorResponse("An error occurred"));
             }
         }
 
@@ -71,9 +71,9 @@ namespace NexUs.Controllers
                 var result = await _service.GetByStudentIdAsync(currentUserId.Value);
                 return Ok(ApiResponse<StudentAssignmentResponseDto?>.SuccessResponse(result, "Student assignment retrieved"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<StudentAssignmentResponseDto?>.ErrorResponse("An error occurred", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<StudentAssignmentResponseDto?>.ErrorResponse("An error occurred"));
             }
         }
 
@@ -92,9 +92,9 @@ namespace NexUs.Controllers
                 var result = await _service.UpsertByStudentIdAsync(currentUserId.Value, dto, currentUserId);
                 return Ok(ApiResponse<StudentAssignmentResponseDto>.SuccessResponse(result, "Student assignment updated"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<StudentAssignmentResponseDto>.ErrorResponse("An error occurred", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<StudentAssignmentResponseDto>.ErrorResponse("An error occurred"));
             }
         }
 
@@ -113,9 +113,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<StudentAssignmentResponseDto>.SuccessResponse(result, "Student assignment retrieved"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<StudentAssignmentResponseDto>.ErrorResponse("An error occurred", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<StudentAssignmentResponseDto>.ErrorResponse("An error occurred"));
             }
         }
 
@@ -135,9 +135,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<StudentAssignmentResponseDto>.SuccessResponse(result, "Student assignment updated"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<StudentAssignmentResponseDto>.ErrorResponse("An error occurred", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<StudentAssignmentResponseDto>.ErrorResponse("An error occurred"));
             }
         }
 
@@ -157,9 +157,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "Student assignment deleted"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred"));
             }
         }
 
@@ -179,9 +179,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "Student assignment restored"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred"));
             }
         }
 
@@ -201,9 +201,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "Student assignment permanently deleted"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred"));
             }
         }
     }

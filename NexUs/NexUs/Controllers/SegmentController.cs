@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NexUs.Attributes;
 using NexUs.Extensions;
@@ -21,7 +21,7 @@ namespace NexUs.Controllers
         public async Task<ActionResult<ApiResponse<PagedResultDto<SegmentListDto>>>> GetAll([FromQuery] PaginationDto pagination)
         {
             try { return Ok(ApiResponse<PagedResultDto<SegmentListDto>>.SuccessResponse(await _service.GetAllAsync(pagination), "Segments retrieved")); }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<PagedResultDto<SegmentListDto>>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<PagedResultDto<SegmentListDto>>.ErrorResponse("Error")); }
         }
 
         [RequirePermission("ArchiveSegments")]
@@ -29,7 +29,7 @@ namespace NexUs.Controllers
         public async Task<ActionResult<ApiResponse<PagedResultDto<SegmentListDto>>>> GetArchived([FromQuery] PaginationDto pagination)
         {
             try { return Ok(ApiResponse<PagedResultDto<SegmentListDto>>.SuccessResponse(await _service.GetArchivedAsync(pagination), "Archived segments retrieved")); }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<PagedResultDto<SegmentListDto>>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<PagedResultDto<SegmentListDto>>.ErrorResponse("Error")); }
         }
 
         [RequirePermission("ViewSegments")]
@@ -42,7 +42,7 @@ namespace NexUs.Controllers
                 if (result == null) return NotFound(ApiResponse<SegmentResponseDto>.ErrorResponse("Segment not found"));
                 return Ok(ApiResponse<SegmentResponseDto>.SuccessResponse(result, "Segment retrieved"));
             }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<SegmentResponseDto>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<SegmentResponseDto>.ErrorResponse("Error")); }
         }
 
         [RequirePermission("ViewSegments")]
@@ -50,7 +50,7 @@ namespace NexUs.Controllers
         public async Task<ActionResult<ApiResponse<SegmentPreviewDto>>> Preview(int id)
         {
             try { return Ok(ApiResponse<SegmentPreviewDto>.SuccessResponse(await _service.PreviewAsync(id), "Preview ready")); }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<SegmentPreviewDto>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<SegmentPreviewDto>.ErrorResponse("Error")); }
         }
 
         [RequirePermission("ViewSegments")]
@@ -58,7 +58,7 @@ namespace NexUs.Controllers
         public async Task<ActionResult<ApiResponse<List<string>>>> GetFieldValues([FromQuery] string field)
         {
             try { return Ok(ApiResponse<List<string>>.SuccessResponse(await _service.GetFieldValuesAsync(field), "Field values retrieved")); }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<List<string>>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<List<string>>.ErrorResponse("Error")); }
         }
 
         [RequirePermission("CreateSegments")]
@@ -72,7 +72,7 @@ namespace NexUs.Controllers
                 return CreatedAtAction(nameof(GetById), new { id = result.Id }, ApiResponse<SegmentResponseDto>.SuccessResponse(result, "Segment created"));
             }
             catch (InvalidOperationException ex) { return BadRequest(ApiResponse<SegmentResponseDto>.ErrorResponse(ex.Message)); }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<SegmentResponseDto>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<SegmentResponseDto>.ErrorResponse("Error")); }
         }
 
         [RequirePermission("UpdateSegments")]
@@ -86,7 +86,7 @@ namespace NexUs.Controllers
                 if (result == null) return NotFound(ApiResponse<SegmentResponseDto>.ErrorResponse("Segment not found"));
                 return Ok(ApiResponse<SegmentResponseDto>.SuccessResponse(result, "Segment updated"));
             }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<SegmentResponseDto>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<SegmentResponseDto>.ErrorResponse("Error")); }
         }
 
         [RequirePermission("DeleteSegments")]
@@ -100,7 +100,7 @@ namespace NexUs.Controllers
                 if (!result) return NotFound(ApiResponse<bool>.ErrorResponse("Segment not found"));
                 return Ok(ApiResponse<bool>.SuccessResponse(true, "Segment archived"));
             }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error")); }
         }
 
         [RequirePermission("RestoreSegments")]
@@ -114,7 +114,7 @@ namespace NexUs.Controllers
                 if (!result) return NotFound(ApiResponse<bool>.ErrorResponse("Segment not found"));
                 return Ok(ApiResponse<bool>.SuccessResponse(true, "Segment restored"));
             }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error")); }
         }
 
         [RequirePermission("PermanentDeleteSegments")]
@@ -127,7 +127,7 @@ namespace NexUs.Controllers
                 if (!result) return NotFound(ApiResponse<bool>.ErrorResponse("Segment not found"));
                 return Ok(ApiResponse<bool>.SuccessResponse(true, "Segment permanently deleted"));
             }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error")); }
         }
     }
 }

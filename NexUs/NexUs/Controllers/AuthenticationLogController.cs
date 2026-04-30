@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NexUs.Models.DTO.Common;
 using NexUs.Models.DTO.OperationLogs;
@@ -39,9 +39,9 @@ namespace NexUs.Controllers
                 var result = await _operationLogService.GetUserLogsAsync(parsedUserId, pagination);
                 return Ok(ApiResponse<PagedResultDto<OperationLogListDto>>.SuccessResponse(result, "Authentication logs retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<OperationLogListDto>>.ErrorResponse("An error occurred while retrieving authentication logs", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<OperationLogListDto>>.ErrorResponse("An error occurred while retrieving authentication logs"));
             }
         }
 
@@ -70,9 +70,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<OperationLogDetailDto>.SuccessResponse(log, "Authentication log retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<OperationLogDetailDto>.ErrorResponse("An error occurred while retrieving authentication log", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<OperationLogDetailDto>.ErrorResponse("An error occurred while retrieving authentication log"));
             }
         }
     }

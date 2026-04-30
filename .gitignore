@@ -7,10 +7,12 @@
 
 # But ignore these within NexUs (they're generated or problematic)
 NexUs/.vs/
-NexUs/bin/
-NexUs/obj/
-NexUs/*.user
+NexUs/**/bin/
+NexUs/**/obj/
+NexUs/**/*.user
 NexUs/.git/
 NexUs/NexUs/nul
+NexUs/NexUs/appsettings.Development.json
+NexUs/NexUs/appsettings.*.json
 
 !.gitignore

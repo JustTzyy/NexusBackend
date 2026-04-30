@@ -15,4 +15,6 @@ public class RegisterDto
     [Required]
     [Compare("Password")]
     public string ConfirmPassword { get; set; } = string.Empty;
+
+    public string? CaptchaToken { get; set; }
 }

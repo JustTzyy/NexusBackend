@@ -41,9 +41,9 @@ namespace NexUs.Controllers
                     return Ok(ApiResponse<PagedResultDto<FeedbackListDto>>.SuccessResponse(result, "Feedback retrieved"));
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<FeedbackListDto>>.ErrorResponse("Error", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<FeedbackListDto>>.ErrorResponse("An unexpected error occurred"));
             }
         }
 
@@ -52,13 +52,16 @@ namespace NexUs.Controllers
         {
             try
             {
-                var result = await _service.GetByIdAsync(id);
+                var userId = HttpContext.GetCurrentUserId();
+                if (userId == null) return Unauthorized(ApiResponse<FeedbackResponseDto>.ErrorResponse("User not authenticated"));
+                var isAdmin = User.IsInRole("Super Admin") || User.IsInRole("Admin");
+                var result = await _service.GetByIdAsync(id, userId.Value, isAdmin);
                 if (result == null) return NotFound(ApiResponse<FeedbackResponseDto>.ErrorResponse("Feedback not found"));
                 return Ok(ApiResponse<FeedbackResponseDto>.SuccessResponse(result, "Feedback retrieved"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<FeedbackResponseDto>.ErrorResponse("Error", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<FeedbackResponseDto>.ErrorResponse("An unexpected error occurred"));
             }
         }
 
@@ -75,9 +78,9 @@ namespace NexUs.Controllers
                 var canSubmit = await _service.CanSubmitFeedbackAsync(userId.Value, sessionLogId);
                 return Ok(ApiResponse<bool>.SuccessResponse(canSubmit, canSubmit ? "You can submit feedback" : "Feedback not available"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<bool>.ErrorResponse("An unexpected error occurred"));
             }
         }
 
@@ -96,9 +99,9 @@ namespace NexUs.Controllers
             {
                 return BadRequest(ApiResponse<FeedbackResponseDto>.ErrorResponse(ex.Message));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<FeedbackResponseDto>.ErrorResponse("Error", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<FeedbackResponseDto>.ErrorResponse("An unexpected error occurred"));
             }
         }
 
@@ -109,13 +112,18 @@ namespace NexUs.Controllers
             {
                 var userId = HttpContext.GetCurrentUserId();
                 if (userId == null) return Unauthorized(ApiResponse<FeedbackResponseDto>.ErrorResponse("User not authenticated"));
-                var result = await _service.UpdateAsync(id, dto, userId.Value);
+                var isAdmin = User.IsInRole("Super Admin") || User.IsInRole("Admin");
+                var result = await _service.UpdateAsync(id, dto, userId.Value, isAdmin);
                 if (result == null) return NotFound(ApiResponse<FeedbackResponseDto>.ErrorResponse("Feedback not found"));
                 return Ok(ApiResponse<FeedbackResponseDto>.SuccessResponse(result, "Feedback updated"));
             }
-            catch (Exception ex)
+            catch (UnauthorizedAccessException ex)
             {
-                return StatusCode(500, ApiResponse<FeedbackResponseDto>.ErrorResponse("Error", new List<string> { ex.Message }));
+                return StatusCode(403, ApiResponse<FeedbackResponseDto>.ErrorResponse(ex.Message));
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, ApiResponse<FeedbackResponseDto>.ErrorResponse("An unexpected error occurred"));
             }
         }
 
@@ -126,13 +134,18 @@ namespace NexUs.Controllers
             {
                 var userId = HttpContext.GetCurrentUserId();
                 if (userId == null) return Unauthorized(ApiResponse<bool>.ErrorResponse("User not authenticated"));
-                var result = await _service.DeleteAsync(id, userId.Value);
+                var isAdmin = User.IsInRole("Super Admin") || User.IsInRole("Admin");
+                var result = await _service.DeleteAsync(id, userId.Value, isAdmin);
                 if (!result) return NotFound(ApiResponse<bool>.ErrorResponse("Feedback not found"));
                 return Ok(ApiResponse<bool>.SuccessResponse(true, "Feedback deleted"));
             }
-            catch (Exception ex)
+            catch (UnauthorizedAccessException ex)
             {
-                return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error", new List<string> { ex.Message }));
+                return StatusCode(403, ApiResponse<bool>.ErrorResponse(ex.Message));
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, ApiResponse<bool>.ErrorResponse("An unexpected error occurred"));
             }
         }
     }

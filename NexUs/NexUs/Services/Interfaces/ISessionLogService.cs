@@ -9,7 +9,7 @@ namespace NexUs.Services.Interfaces
         Task<SessionLogResponseDto?> GetByIdAsync(int id);
         Task<PagedResultDto<SessionLogResponseDto>> GetAllAsync(PaginationDto pagination);
         Task<SessionLogResponseDto> CreateAsync(CreateSessionLogDto dto, int? userId);
-        Task<SessionLogResponseDto?> UpdateAsync(int id, UpdateSessionLogDto dto, int? userId);
-        Task<bool> DeleteAsync(int id, int? userId);
+        Task<SessionLogResponseDto?> UpdateAsync(int id, UpdateSessionLogDto dto, int? userId, bool isAdmin = false);
+        Task<bool> DeleteAsync(int id, int? userId, bool isAdmin = false);
     }
 }

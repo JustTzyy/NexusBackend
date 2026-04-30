@@ -1,5 +1,7 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
+using NexUs.Exceptions;
 using NexUs.Models.DTO.Auth;
 using NexUs.Models.DTO.Common;
 using NexUs.Services.Interfaces;
@@ -14,22 +16,28 @@ public class AuthController : ControllerBase
     private readonly IAuthService _authService;
     private readonly IOperationLogService _operationLogService;
     private readonly IAuditService _auditService;
+    private readonly IRecaptchaService _recaptcha;
 
-    public AuthController(IAuthService authService, IOperationLogService operationLogService, IAuditService auditService)
+    public AuthController(IAuthService authService, IOperationLogService operationLogService, IAuditService auditService, IRecaptchaService recaptcha)
     {
         _authService = authService;
         _operationLogService = operationLogService;
         _auditService = auditService;
+        _recaptcha = recaptcha;
     }
 
     /// <summary>
     /// Register a new user (automatically assigned Lead role)
     /// </summary>
     [HttpPost("register")]
+    [EnableRateLimiting("auth")]
     public async Task<ActionResult<ApiResponse<LoginResponseDto>>> Register([FromBody] RegisterDto dto)
     {
         try
         {
+            if (!await _recaptcha.VerifyAsync(dto.CaptchaToken ?? "", "register"))
+                return BadRequest(ApiResponse<LoginResponseDto>.ErrorResponse("CAPTCHA verification failed. Please try again."));
+
             var result = await _authService.RegisterAsync(dto);
 
             var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
@@ -43,9 +51,9 @@ public class AuthController : ControllerBase
         {
             return BadRequest(ApiResponse<LoginResponseDto>.ErrorResponse(ex.Message));
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            return StatusCode(500, ApiResponse<LoginResponseDto>.ErrorResponse("An error occurred during registration", new List<string> { ex.Message }));
+            return StatusCode(500, ApiResponse<LoginResponseDto>.ErrorResponse("An error occurred during registration"));
         }
     }
 
@@ -60,9 +68,9 @@ public class AuthController : ControllerBase
             var exists = await _authService.EmailExistsAsync(email);
             return Ok(ApiResponse<object>.SuccessResponse(new { exists }, exists ? "Email is already registered" : "Email is available"));
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred", new List<string> { ex.Message }));
+            return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred"));
         }
     }
 
@@ -70,6 +78,7 @@ public class AuthController : ControllerBase
     /// Send OTP verification code to email
     /// </summary>
     [HttpPost("send-otp")]
+    [EnableRateLimiting("auth")]
     public async Task<ActionResult<ApiResponse<object>>> SendOtp([FromBody] SendOtpDto dto)
     {
         try
@@ -77,9 +86,9 @@ public class AuthController : ControllerBase
             await _authService.SendOtpAsync(dto.Email);
             return Ok(ApiResponse<object>.SuccessResponse(null, "If this email is valid, a verification code has been sent."));
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while sending verification code", new List<string> { ex.Message }));
+            return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while sending verification code"));
         }
     }
 
@@ -100,9 +109,13 @@ public class AuthController : ControllerBase
 
             return Ok(ApiResponse<object>.SuccessResponse(null, "Email verified successfully"));
         }
-        catch (Exception ex)
+        catch (AccountLockedException ex)
         {
-            return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred during verification", new List<string> { ex.Message }));
+            return StatusCode(423, new { success = false, message = ex.Message, data = new { remainingMinutes = ex.RemainingMinutes } });
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred during verification"));
         }
     }
 
@@ -110,10 +123,14 @@ public class AuthController : ControllerBase
     /// Login with email and password
     /// </summary>
     [HttpPost("login")]
+    [EnableRateLimiting("auth")]
     public async Task<ActionResult<ApiResponse<LoginResponseDto>>> Login([FromBody] LoginDto dto)
     {
         try
         {
+            if (!await _recaptcha.VerifyAsync(dto.CaptchaToken ?? "", "login"))
+                return BadRequest(ApiResponse<LoginResponseDto>.ErrorResponse("CAPTCHA verification failed. Please try again."));
+
             var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
             var device = Request.Headers["User-Agent"].ToString();
 
@@ -128,9 +145,13 @@ public class AuthController : ControllerBase
             await _operationLogService.LogAuthActivityAsync(result.UserId, "login", "success", ip, device, null);
             return Ok(ApiResponse<LoginResponseDto>.SuccessResponse(result, "Login successful"));
         }
-        catch (Exception ex)
+        catch (AccountLockedException ex)
         {
-            return StatusCode(500, ApiResponse<LoginResponseDto>.ErrorResponse("An error occurred during login", new List<string> { ex.Message }));
+            return StatusCode(423, new { success = false, message = ex.Message, data = new { remainingMinutes = ex.RemainingMinutes } });
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, ApiResponse<LoginResponseDto>.ErrorResponse("An error occurred during login"));
         }
     }
 
@@ -138,6 +159,7 @@ public class AuthController : ControllerBase
     /// Login with Google credential (existing users only)
     /// </summary>
     [HttpPost("google-login")]
+    [EnableRateLimiting("auth")]
     public async Task<ActionResult<ApiResponse<LoginResponseDto>>> GoogleLogin([FromBody] GoogleLoginDto dto)
     {
         try
@@ -156,9 +178,9 @@ public class AuthController : ControllerBase
             await _operationLogService.LogAuthActivityAsync(result.UserId, "login", "success", ip, device, null);
             return Ok(ApiResponse<LoginResponseDto>.SuccessResponse(result, "Google login successful"));
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            return StatusCode(500, ApiResponse<LoginResponseDto>.ErrorResponse("An error occurred during Google login", new List<string> { ex.Message }));
+            return StatusCode(500, ApiResponse<LoginResponseDto>.ErrorResponse("An error occurred during Google login"));
         }
     }
 
@@ -186,9 +208,9 @@ public class AuthController : ControllerBase
 
             return Ok(ApiResponse<object>.SuccessResponse(null, "Logged out successfully"));
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred during logout", new List<string> { ex.Message }));
+            return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred during logout"));
         }
     }
 
@@ -226,9 +248,9 @@ public class AuthController : ControllerBase
 
             return Ok(ApiResponse<LoginResponseDto>.SuccessResponse(response, "User info retrieved"));
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            return StatusCode(500, ApiResponse<LoginResponseDto>.ErrorResponse("An error occurred", new List<string> { ex.Message }));
+            return StatusCode(500, ApiResponse<LoginResponseDto>.ErrorResponse("An error occurred"));
         }
     }
 
@@ -259,9 +281,9 @@ public class AuthController : ControllerBase
 
             return Ok(ApiResponse<object>.SuccessResponse(null, "Password changed successfully"));
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while changing password", new List<string> { ex.Message }));
+            return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while changing password"));
         }
     }
 
@@ -292,9 +314,9 @@ public class AuthController : ControllerBase
 
             return Ok(ApiResponse<object>.SuccessResponse(null, "Account deactivated successfully"));
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while deactivating account", new List<string> { ex.Message }));
+            return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while deactivating account"));
         }
     }
 
@@ -302,18 +324,22 @@ public class AuthController : ControllerBase
     /// Request password reset email
     /// </summary>
     [HttpPost("forgot-password")]
+    [EnableRateLimiting("auth")]
     public async Task<ActionResult<ApiResponse<object>>> ForgotPassword([FromBody] ForgotPasswordDto dto)
     {
         try
         {
+            if (!await _recaptcha.VerifyAsync(dto.CaptchaToken ?? "", "forgot_password"))
+                return BadRequest(ApiResponse<object>.ErrorResponse("CAPTCHA verification failed. Please try again."));
+
             var result = await _authService.RequestPasswordResetAsync(dto.Email);
             
             // Always return success to prevent email enumeration
             return Ok(ApiResponse<object>.SuccessResponse(null, "If an account exists with this email, you will receive a password reset link."));
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred", new List<string> { ex.Message }));
+            return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred"));
         }
     }
 
@@ -334,9 +360,9 @@ public class AuthController : ControllerBase
 
             return Ok(ApiResponse<object>.SuccessResponse(null, "Password reset successfully"));
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred", new List<string> { ex.Message }));
+            return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred"));
         }
     }
 
@@ -349,17 +375,14 @@ public class AuthController : ControllerBase
         try
         {
             var result = await _authService.ValidateResetTokenAsync(token);
-
+            // Always return 200 to prevent token enumeration via status code
             if (result == null || !result.IsValid)
-            {
-                return BadRequest(ApiResponse<ValidateTokenResponseDto>.ErrorResponse("Invalid or expired reset token"));
-            }
-
+                return Ok(ApiResponse<ValidateTokenResponseDto>.ErrorResponse("Invalid or expired reset token"));
             return Ok(ApiResponse<ValidateTokenResponseDto>.SuccessResponse(result, "Token is valid"));
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            return StatusCode(500, ApiResponse<ValidateTokenResponseDto>.ErrorResponse("An error occurred", new List<string> { ex.Message }));
+            return Ok(ApiResponse<ValidateTokenResponseDto>.ErrorResponse("Invalid or expired reset token"));
         }
     }
 }

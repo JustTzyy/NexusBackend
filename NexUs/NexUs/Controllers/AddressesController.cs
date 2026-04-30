@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NexUs.Models.DTO.Common;
 using NexUs.Services.Interfaces;
@@ -25,9 +25,9 @@ namespace NexUs.Controllers
                 var id = await _addressService.CreateAddressAsync(dto);
                 return CreatedAtAction(nameof(CreateAddress), new { id }, ApiResponse<int>.SuccessResponse(id, "Address created successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<int>.ErrorResponse($"Failed to create address: {ex.Message}"));
+                return StatusCode(500, ApiResponse<int>.ErrorResponse("An unexpected error occurred"));
             }
         }
     }

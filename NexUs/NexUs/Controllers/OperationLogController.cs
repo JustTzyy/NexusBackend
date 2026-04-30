@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NexUs.Attributes;
 using NexUs.Models.DTO.Common;
@@ -28,9 +28,9 @@ namespace NexUs.Controllers
                 var result = await _operationLogService.GetAllLogsAsync(pagination);
                 return Ok(ApiResponse<PagedResultDto<OperationLogListDto>>.SuccessResponse(result, "Operation logs retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<OperationLogListDto>>.ErrorResponse("An error occurred while retrieving operation logs", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<OperationLogListDto>>.ErrorResponse("An error occurred while retrieving operation logs"));
             }
         }
 
@@ -48,9 +48,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<OperationLogDetailDto>.SuccessResponse(log, "Operation log retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<OperationLogDetailDto>.ErrorResponse("An error occurred while retrieving operation log", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<OperationLogDetailDto>.ErrorResponse("An error occurred while retrieving operation log"));
             }
         }
     }

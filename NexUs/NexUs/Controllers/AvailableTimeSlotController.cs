@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NexUs.Attributes;
 using NexUs.Extensions;
@@ -31,9 +31,9 @@ namespace NexUs.Controllers
                 var result = await _availableTimeSlotService.GetAllAvailableTimeSlotsAsync(new PaginationDto { PageNumber = 1, PageSize = 200 });
                 return Ok(ApiResponse<PagedResultDto<AvailableTimeSlotListDto>>.SuccessResponse(result, "Time slots retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<AvailableTimeSlotListDto>>.ErrorResponse("An error occurred while retrieving time slots", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<AvailableTimeSlotListDto>>.ErrorResponse("An error occurred while retrieving time slots"));
             }
         }
 
@@ -46,9 +46,9 @@ namespace NexUs.Controllers
                 var result = await _availableTimeSlotService.GetAllAvailableTimeSlotsAsync(pagination);
                 return Ok(ApiResponse<PagedResultDto<AvailableTimeSlotListDto>>.SuccessResponse(result, "Time slots retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<AvailableTimeSlotListDto>>.ErrorResponse("An error occurred while retrieving time slots", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<AvailableTimeSlotListDto>>.ErrorResponse("An error occurred while retrieving time slots"));
             }
         }
 
@@ -61,9 +61,9 @@ namespace NexUs.Controllers
                 var result = await _availableTimeSlotService.GetArchivedAvailableTimeSlotsAsync(pagination);
                 return Ok(ApiResponse<PagedResultDto<AvailableTimeSlotListDto>>.SuccessResponse(result, "Archived time slots retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<AvailableTimeSlotListDto>>.ErrorResponse("An error occurred while retrieving archived time slots", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<AvailableTimeSlotListDto>>.ErrorResponse("An error occurred while retrieving archived time slots"));
             }
         }
 
@@ -81,9 +81,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<AvailableTimeSlotResponseDto>.SuccessResponse(slot, "Time slot retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<AvailableTimeSlotResponseDto>.ErrorResponse("An error occurred while retrieving time slot", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<AvailableTimeSlotResponseDto>.ErrorResponse("An error occurred while retrieving time slot"));
             }
         }
 
@@ -102,9 +102,9 @@ namespace NexUs.Controllers
             {
                 return BadRequest(ApiResponse<AvailableTimeSlotResponseDto>.ErrorResponse(ex.Message));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<AvailableTimeSlotResponseDto>.ErrorResponse("An error occurred while creating time slot", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<AvailableTimeSlotResponseDto>.ErrorResponse("An error occurred while creating time slot"));
             }
         }
 
@@ -127,9 +127,9 @@ namespace NexUs.Controllers
             {
                 return BadRequest(ApiResponse<AvailableTimeSlotResponseDto>.ErrorResponse(ex.Message));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<AvailableTimeSlotResponseDto>.ErrorResponse("An error occurred while updating time slot", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<AvailableTimeSlotResponseDto>.ErrorResponse("An error occurred while updating time slot"));
             }
         }
 
@@ -148,9 +148,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "Time slot deleted successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while deleting time slot", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while deleting time slot"));
             }
         }
 
@@ -169,9 +169,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "Time slot restored successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while restoring time slot", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while restoring time slot"));
             }
         }
 
@@ -190,9 +190,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "Time slot permanently deleted"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while permanently deleting time slot", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while permanently deleting time slot"));
             }
         }
     }

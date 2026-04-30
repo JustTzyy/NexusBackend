@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NexUs.Attributes;
 using NexUs.Extensions;
@@ -21,7 +21,7 @@ namespace NexUs.Controllers
         public async Task<ActionResult<ApiResponse<PagedResultDto<EmailTemplateListDto>>>> GetAll([FromQuery] PaginationDto pagination)
         {
             try { var result = await _service.GetAllAsync(pagination); return Ok(ApiResponse<PagedResultDto<EmailTemplateListDto>>.SuccessResponse(result, "Templates retrieved")); }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<PagedResultDto<EmailTemplateListDto>>.ErrorResponse("Error retrieving templates", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<PagedResultDto<EmailTemplateListDto>>.ErrorResponse("Error retrieving templates")); }
         }
 
         [RequirePermission("ArchiveEmailTemplates")]
@@ -29,7 +29,7 @@ namespace NexUs.Controllers
         public async Task<ActionResult<ApiResponse<PagedResultDto<EmailTemplateListDto>>>> GetArchived([FromQuery] PaginationDto pagination)
         {
             try { var result = await _service.GetArchivedAsync(pagination); return Ok(ApiResponse<PagedResultDto<EmailTemplateListDto>>.SuccessResponse(result, "Archived templates retrieved")); }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<PagedResultDto<EmailTemplateListDto>>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<PagedResultDto<EmailTemplateListDto>>.ErrorResponse("Error")); }
         }
 
         [RequirePermission("ViewEmailTemplates")]
@@ -42,7 +42,7 @@ namespace NexUs.Controllers
                 if (result == null) return NotFound(ApiResponse<EmailTemplateResponseDto>.ErrorResponse("Template not found"));
                 return Ok(ApiResponse<EmailTemplateResponseDto>.SuccessResponse(result, "Template retrieved"));
             }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<EmailTemplateResponseDto>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<EmailTemplateResponseDto>.ErrorResponse("Error")); }
         }
 
         [RequirePermission("CreateEmailTemplates")]
@@ -56,7 +56,7 @@ namespace NexUs.Controllers
                 return CreatedAtAction(nameof(GetById), new { id = result.Id }, ApiResponse<EmailTemplateResponseDto>.SuccessResponse(result, "Template created"));
             }
             catch (InvalidOperationException ex) { return BadRequest(ApiResponse<EmailTemplateResponseDto>.ErrorResponse(ex.Message)); }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<EmailTemplateResponseDto>.ErrorResponse("Error creating template", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<EmailTemplateResponseDto>.ErrorResponse("Error creating template")); }
         }
 
         [RequirePermission("UpdateEmailTemplates")]
@@ -70,7 +70,7 @@ namespace NexUs.Controllers
                 if (result == null) return NotFound(ApiResponse<EmailTemplateResponseDto>.ErrorResponse("Template not found"));
                 return Ok(ApiResponse<EmailTemplateResponseDto>.SuccessResponse(result, "Template updated"));
             }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<EmailTemplateResponseDto>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<EmailTemplateResponseDto>.ErrorResponse("Error")); }
         }
 
         [RequirePermission("DeleteEmailTemplates")]
@@ -84,7 +84,7 @@ namespace NexUs.Controllers
                 if (!result) return NotFound(ApiResponse<bool>.ErrorResponse("Template not found"));
                 return Ok(ApiResponse<bool>.SuccessResponse(true, "Template archived"));
             }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error")); }
         }
 
         [RequirePermission("RestoreEmailTemplates")]
@@ -98,7 +98,7 @@ namespace NexUs.Controllers
                 if (!result) return NotFound(ApiResponse<bool>.ErrorResponse("Template not found"));
                 return Ok(ApiResponse<bool>.SuccessResponse(true, "Template restored"));
             }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error")); }
         }
 
         [RequirePermission("PermanentDeleteEmailTemplates")]
@@ -111,7 +111,7 @@ namespace NexUs.Controllers
                 if (!result) return NotFound(ApiResponse<bool>.ErrorResponse("Template not found"));
                 return Ok(ApiResponse<bool>.SuccessResponse(true, "Template permanently deleted"));
             }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<bool>.ErrorResponse("Error")); }
         }
     }
 }

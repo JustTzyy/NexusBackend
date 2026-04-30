@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NexUs.Attributes;
 using NexUs.Extensions;
@@ -28,9 +28,9 @@ namespace NexUs.Controllers
                 var result = await _subjectService.GetAllSubjectsAsync(new PaginationDto { PageSize = 1000 });
                 return Ok(ApiResponse<PagedResultDto<SubjectListDto>>.SuccessResponse(result, "Subjects retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<SubjectListDto>>.ErrorResponse("An error occurred while retrieving subjects", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<SubjectListDto>>.ErrorResponse("An error occurred while retrieving subjects"));
             }
         }
 
@@ -43,9 +43,9 @@ namespace NexUs.Controllers
                 var result = await _subjectService.GetAllSubjectsAsync(pagination);
                 return Ok(ApiResponse<PagedResultDto<SubjectListDto>>.SuccessResponse(result, "Subjects retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<SubjectListDto>>.ErrorResponse("An error occurred while retrieving subjects", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<SubjectListDto>>.ErrorResponse("An error occurred while retrieving subjects"));
             }
         }
 
@@ -58,9 +58,9 @@ namespace NexUs.Controllers
                 var result = await _subjectService.GetArchivedSubjectsAsync(pagination);
                 return Ok(ApiResponse<PagedResultDto<SubjectListDto>>.SuccessResponse(result, "Archived subjects retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<SubjectListDto>>.ErrorResponse("An error occurred while retrieving archived subjects", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<SubjectListDto>>.ErrorResponse("An error occurred while retrieving archived subjects"));
             }
         }
 
@@ -78,9 +78,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<SubjectResponseDto>.SuccessResponse(subject, "Subject retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<SubjectResponseDto>.ErrorResponse("An error occurred while retrieving subject", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<SubjectResponseDto>.ErrorResponse("An error occurred while retrieving subject"));
             }
         }
 
@@ -99,9 +99,9 @@ namespace NexUs.Controllers
             {
                 return BadRequest(ApiResponse<SubjectResponseDto>.ErrorResponse(ex.Message));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<SubjectResponseDto>.ErrorResponse("An error occurred while creating subject", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<SubjectResponseDto>.ErrorResponse("An error occurred while creating subject"));
             }
         }
 
@@ -124,9 +124,9 @@ namespace NexUs.Controllers
             {
                 return BadRequest(ApiResponse<SubjectResponseDto>.ErrorResponse(ex.Message));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<SubjectResponseDto>.ErrorResponse("An error occurred while updating subject", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<SubjectResponseDto>.ErrorResponse("An error occurred while updating subject"));
             }
         }
 
@@ -145,9 +145,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "Subject deleted successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while deleting subject", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while deleting subject"));
             }
         }
 
@@ -166,9 +166,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "Subject restored successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while restoring subject", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while restoring subject"));
             }
         }
 
@@ -187,9 +187,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "Subject permanently deleted"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while permanently deleting subject", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while permanently deleting subject"));
             }
         }
     }

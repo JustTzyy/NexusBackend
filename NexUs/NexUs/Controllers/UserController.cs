@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NexUs.Attributes;
 using NexUs.Extensions;
@@ -32,7 +32,7 @@ namespace NexUs.Controllers
             bool isAdmin = User.IsInRole("Admin");
             if (!isAdmin || isSuperAdmin) return true;
 
-            // Admin (not Super Admin) — block assigning Super Admin or Admin roles
+            // Admin (not Super Admin) â€” block assigning Super Admin or Admin roles
             var allRoles = await _roleService.GetAllRolesAsync(new PaginationDto { PageNumber = 1, PageSize = 100 });
             var restrictedIds = allRoles.Items
                 .Where(r => r.Name == "Super Admin" || r.Name == "Admin")
@@ -59,9 +59,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<UserResponseDto>.SuccessResponse(user, "User retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<UserResponseDto>.ErrorResponse("An error occurred while retrieving user", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<UserResponseDto>.ErrorResponse("An error occurred while retrieving user"));
             }
         }
 
@@ -90,9 +90,9 @@ namespace NexUs.Controllers
             {
                 return BadRequest(ApiResponse<UserResponseDto>.ErrorResponse(ex.Message));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<UserResponseDto>.ErrorResponse("An error occurred while updating user", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<UserResponseDto>.ErrorResponse("An error occurred while updating user"));
             }
         }
 
@@ -108,9 +108,9 @@ namespace NexUs.Controllers
                 var result = await _userService.GetAllUsersAsync(pagination);
                 return Ok(ApiResponse<PagedResultDto<UserListDto>>.SuccessResponse(result, "Users retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<UserListDto>>.ErrorResponse("An error occurred while retrieving users", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<UserListDto>>.ErrorResponse("An error occurred while retrieving users"));
             }
         }
 
@@ -131,9 +131,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<UserResponseDto>.SuccessResponse(user, "User retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<UserResponseDto>.ErrorResponse("An error occurred while retrieving user", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<UserResponseDto>.ErrorResponse("An error occurred while retrieving user"));
             }
         }
 
@@ -149,9 +149,9 @@ namespace NexUs.Controllers
                 var roles = await _userService.GetUserRolesAsync(id);
                 return Ok(ApiResponse<List<RoleListDto>>.SuccessResponse(roles, "User roles retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<List<RoleListDto>>.ErrorResponse("An error occurred while retrieving user roles", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<List<RoleListDto>>.ErrorResponse("An error occurred while retrieving user roles"));
             }
         }
 
@@ -167,9 +167,9 @@ namespace NexUs.Controllers
                 var users = await _userService.GetUsersByRoleAsync(roleName);
                 return Ok(ApiResponse<List<UserListDto>>.SuccessResponse(users, "Users retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<List<UserListDto>>.ErrorResponse("An error occurred while retrieving users by role", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<List<UserListDto>>.ErrorResponse("An error occurred while retrieving users by role"));
             }
         }
 
@@ -185,9 +185,9 @@ namespace NexUs.Controllers
                 var result = await _userService.GetArchivedUsersAsync(pagination);
                 return Ok(ApiResponse<PagedResultDto<UserListDto>>.SuccessResponse(result, "Archived users retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<UserListDto>>.ErrorResponse("An error occurred while retrieving archived users", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<UserListDto>>.ErrorResponse("An error occurred while retrieving archived users"));
             }
         }
 
@@ -212,9 +212,9 @@ namespace NexUs.Controllers
             {
                 return BadRequest(ApiResponse<UserResponseDto>.ErrorResponse(ex.Message));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<UserResponseDto>.ErrorResponse("An error occurred while creating user", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<UserResponseDto>.ErrorResponse("An error occurred while creating user"));
             }
         }
 
@@ -243,9 +243,9 @@ namespace NexUs.Controllers
             {
                 return BadRequest(ApiResponse<UserResponseDto>.ErrorResponse(ex.Message));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<UserResponseDto>.ErrorResponse("An error occurred while updating user", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<UserResponseDto>.ErrorResponse("An error occurred while updating user"));
             }
         }
 
@@ -267,9 +267,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "User deleted successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while deleting user", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while deleting user"));
             }
         }
 
@@ -291,9 +291,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "User restored successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while restoring user", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while restoring user"));
             }
         }
 
@@ -315,9 +315,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "User permanently deleted"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while permanently deleting user", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while permanently deleting user"));
             }
         }
 
@@ -339,9 +339,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<object>.SuccessResponse(null, "Roles assigned successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while assigning roles", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while assigning roles"));
             }
         }
 
@@ -357,9 +357,9 @@ namespace NexUs.Controllers
                 var result = await _userService.GetClientSummariesAsync(pagination);
                 return Ok(ApiResponse<PagedResultDto<ClientLogListDto>>.SuccessResponse(result, "Client log retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<PagedResultDto<ClientLogListDto>>.ErrorResponse("An error occurred while retrieving client log", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<PagedResultDto<ClientLogListDto>>.ErrorResponse("An error occurred while retrieving client log"));
             }
         }
 
@@ -378,9 +378,9 @@ namespace NexUs.Controllers
 
                 return Ok(ApiResponse<ClientDetailDto>.SuccessResponse(result, "Client detail retrieved successfully"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ApiResponse<ClientDetailDto>.ErrorResponse("An error occurred while retrieving client detail", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<ClientDetailDto>.ErrorResponse("An error occurred while retrieving client detail"));
             }
         }
 
@@ -410,7 +410,7 @@ namespace NexUs.Controllers
             }
             catch
             {
-                // Non-critical — don't surface email failures to the user
+                // Non-critical â€” don't surface email failures to the user
             }
 
             return Ok(ApiResponse<object>.SuccessResponse(null, "Profile completion notification sent"));

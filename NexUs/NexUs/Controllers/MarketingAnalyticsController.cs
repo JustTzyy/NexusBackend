@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NexUs.Models.DTO.Common;
 using NexUs.Models.DTO.Marketing;
@@ -19,14 +19,14 @@ namespace NexUs.Controllers
             [FromQuery] DateTime? fromDate = null, [FromQuery] DateTime? toDate = null)
         {
             try { return Ok(ApiResponse<MarketingOverviewDto>.SuccessResponse(await _service.GetOverviewAsync(fromDate, toDate), "Overview retrieved")); }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<MarketingOverviewDto>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<MarketingOverviewDto>.ErrorResponse("Error")); }
         }
 
         [HttpGet("campaigns")]
         public async Task<ActionResult<ApiResponse<List<CampaignStatsDto>>>> GetCampaigns()
         {
             try { return Ok(ApiResponse<List<CampaignStatsDto>>.SuccessResponse(await _service.GetCampaignStatsAsync(), "Campaign stats retrieved")); }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<List<CampaignStatsDto>>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<List<CampaignStatsDto>>.ErrorResponse("Error")); }
         }
 
         [HttpGet("email-performance")]
@@ -34,14 +34,14 @@ namespace NexUs.Controllers
             [FromQuery] DateTime? fromDate, [FromQuery] DateTime? toDate, [FromQuery] string groupBy = "day")
         {
             try { return Ok(ApiResponse<List<EmailPerformanceDto>>.SuccessResponse(await _service.GetEmailPerformanceAsync(fromDate, toDate, groupBy), "Performance data retrieved")); }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<List<EmailPerformanceDto>>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<List<EmailPerformanceDto>>.ErrorResponse("Error")); }
         }
 
         [HttpGet("lead-pipeline")]
         public async Task<ActionResult<ApiResponse<List<LeadPipelineDto>>>> GetLeadPipeline()
         {
             try { return Ok(ApiResponse<List<LeadPipelineDto>>.SuccessResponse(await _service.GetLeadPipelineAsync(), "Pipeline data retrieved")); }
-            catch (Exception ex) { return StatusCode(500, ApiResponse<List<LeadPipelineDto>>.ErrorResponse("Error", new List<string> { ex.Message })); }
+            catch (Exception) { return StatusCode(500, ApiResponse<List<LeadPipelineDto>>.ErrorResponse("Error")); }
         }
     }
 }
